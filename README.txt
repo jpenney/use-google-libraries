@@ -3,7 +3,7 @@ Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo
 Requires at least: 2.6
-Tested up to: 2.6
+Tested up to: 2.7b3
 Stable tag: 1.0
 
 Allows your site to use common javascript libraries from Google's AJAX 
@@ -18,7 +18,7 @@ network side of Google's AJAX Library API, rather than serving these files from 
 
 This provides numerous potential performance benefits:
 
-* increases the chance that a user already has this files cached
+* increases the chance that a user already has these files cached
 * takes load off your server
 * uses compressed versions of the libraries (where available)
 * Google's servers are set up to negotiate HTTP compression with the requesting browser
@@ -35,7 +35,7 @@ This provides numerous potential performance benefits:
 == Installation ==
 
 # Upload the `use-google-libraries` folder to the `/wp-content/plugins/` folder.
-# Activate *Use Google Libraries* through the 'Plugins' menu in WordPress.
+# Activate **Use Google Libraries** through the 'Plugins' menu in WordPress.
 # Er... That's it really.
 
 == Frequently Asked Questions ==
@@ -47,16 +47,16 @@ available indefinitely, so you shouldn't need to worry about them
 disappearing.  
 
 This plugin loads scripts using only their major and minor versions, so if 
-Wordpress asks for jQuery 2.6.3, the plugin will load the latest 2.6.x 
+WordPress asks for jQuery 2.6.3, the plugin will load the latest 2.6.x 
 available on Googles servers.  
 
 == Technical Details ==
 
-*Use Google Libraries* uses the following hooks (each with a priority of 1000).
+**Use Google Libraries** uses the following hooks (each with a priority of 1000).
 
 = wp_default_scripts =
 
-*Use Google Libraries* compares it's list of supported scripts to those 
+**Use Google Libraries** compares it's list of supported scripts to those 
 registered, and replaces the standard registrations `src` with ones that 
 point to Google's servers.  Other attributes (like dependencies) are left 
 intact.
