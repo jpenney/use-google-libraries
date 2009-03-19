@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: Use Google Libraries
-Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
-Description:Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from Wordpress's own copies. 
-Version: 1.0 
-Author: Jason Penney
-Author URI: http://jasonpenney.net/
+  Plugin Name: Use Google Libraries
+  Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
+  Description:Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from Wordpress's own copies. 
+  Version: 1.0 
+  Author: Jason Penney
+  Author URI: http://jasonpenney.net/
 */ 
 
 /*  Copyright 2008  Jason Penney (email : jpenney@jczorkmid.net )
@@ -51,24 +51,24 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
      */		
     function __construct(){
       $this->google_scripts =   array(
-		'jquery' => array( 'jquery','jquery.min'),
-		'jquery-ui-core' => array('jqueryui','jquery-ui.min'),
-		'jquery-ui-tabs' => array('',''),
-		'jquery-ui-sortable' => array('',''),
-		'jquery-ui-draggable' => array('',''),
-		'jquery-ui-resizable' => array('',''),
-		'jquery-ui-dialog' => array('',''),
-		'prototype' => array('prototype','prototype'),
-		'scriptaculous-root' => array('scriptaculous', 'scriptaculous'),
-		'scriptaculous-builder' => array('',''),
-		'scriptaculous-effects' => array('',''),
-		'scriptaculous-dragdrop' => array('',''),
-		'scriptaculous-controls' => array('',''),
-		'scriptaculous-slider' => array('',''),
-		'scriptaculous-sound' => array('',''),
-		'mootools' => array('mootools','mootools-yui-compressed'),
-		'dojo' => array('dojo','dojo.xd')
-		);
+                                      'jquery' => array( 'jquery','jquery.min'),
+                                      'jquery-ui-core' => array('jqueryui','jquery-ui.min'),
+                                      'jquery-ui-tabs' => array('',''),
+                                      'jquery-ui-sortable' => array('',''),
+                                      'jquery-ui-draggable' => array('',''),
+                                      'jquery-ui-resizable' => array('',''),
+                                      'jquery-ui-dialog' => array('',''),
+                                      'prototype' => array('prototype','prototype'),
+                                      'scriptaculous-root' => array('scriptaculous', 'scriptaculous'),
+                                      'scriptaculous-builder' => array('',''),
+                                      'scriptaculous-effects' => array('',''),
+                                      'scriptaculous-dragdrop' => array('',''),
+                                      'scriptaculous-controls' => array('',''),
+                                      'scriptaculous-slider' => array('',''),
+                                      'scriptaculous-sound' => array('',''),
+                                      'mootools' => array('mootools','mootools-yui-compressed'),
+                                      'dojo' => array('dojo','dojo.xd')
+                                      );
       add_action( 'wp_default_scripts', array(&$this,"replace_default_scripts"),1000);
       add_filter( 'print_scripts_array',array(&$this,"jquery_noconflict"),1000);
       add_filter( 'script_loader_src', array(&$this,"remove_ver_query"),1000);
@@ -89,18 +89,19 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
 
 	  // default to requested ver
 	  $ver = $script->ver;
-	  // drop the micro number
-	    if ( preg_match( '/[0-9]+\.[0-9]+/', $ver, $match ) ) {
-	      $ver = $match[0];
-	    }
-	  
 
-	    // if $lib is empty, then this script does not need to be 
-	    // exlicitly loaded when using googleapis.com, but we need to keep
-	    // it around for dependencies
+          // if $lib is empty, then this script does not need to be 
+          // exlicitly loaded when using googleapis.com, but we need to keep
+          // it around for dependencies
 	  if ($lib != '') {
 	    // build new URL
 	    $script->src = "http://ajax.googleapis.com/ajax/libs/$lib/$ver/$js.js";
+            // test for SSL
+            // thanks to suggestion from Peter Wilson (http://peterwilson.cc/)
+            if ((isset($_SERVER['HTTPS'])) AND ($_SERVER['HTTPS'] != ”) AND ($_SERVER['HTTPS'] != ‘off’)) {
+              //use ssl
+              $script->src = preg_replace('/^http:/', 'https:', $script->src);
+            }
 	  } else {
 	    $script->src = "";
 	  }
