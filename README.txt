@@ -47,10 +47,6 @@ Google has stated that they intend to keep every file they've hosted
 available indefinitely, so you shouldn't need to worry about them 
 disappearing.  
 
-This plugin loads scripts using only their major and minor versions, so if 
-WordPress asks for jQuery 2.6.3, the plugin will load the latest 2.6.x 
-available on Googles servers.  
-
 == Technical Details ==
 
 **Use Google Libraries** uses the following hooks (each with a priority of 1000).
