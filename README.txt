@@ -14,8 +14,7 @@ Libraries CDN, rather than from Wordpress's own copies.
 A number of the javascript libraries distributed with Wordpress are also 
 hosted on Google's [AJAX Libraries API](http://code.google.com/apis/ajaxlibs/).
 This plugin allows your Wordpress site to use the content distribution 
-network side of Google's AJAX Library API, rather than serving these files from your 
-Wordpress install directly.
+network side of Google's AJAX Library API, rather than serving these files from your Wordpress install directly.
 
 This provides numerous potential performance benefits:
 
@@ -24,6 +23,10 @@ This provides numerous potential performance benefits:
 * uses compressed versions of the libraries (where available)
 * Google's servers are set up to negotiate HTTP compression with the requesting browser
 
+For a more detailed look see Dave Ward's [3 reasons why you should let
+Google host jQuery for
+you](http://encosia.com/2008/12/10/3-reasons-why-you-should-let-google-host-jquery-for-you/).
+.
 = Supported Libraries and Components =
 
 * [Dojo](http://dojotoolkit.org/)
@@ -46,10 +49,6 @@ This provides numerous potential performance benefits:
 Google has stated that they intend to keep every file they've hosted 
 available indefinitely, so you shouldn't need to worry about them 
 disappearing.  
-
-This plugin loads scripts using only their major and minor versions, so if 
-WordPress asks for jQuery 2.6.3, the plugin will load the latest 2.6.x 
-available on Googles servers.  
 
 == Technical Details ==
 
