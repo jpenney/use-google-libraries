@@ -1,9 +1,9 @@
 === Use Google Libraries ===
 Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
-Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo
+Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API
 Requires at least: 2.6
-Tested up to: 2.7b3
+Tested up to: 2.7.1
 Stable tag: 1.0
 
 Allows your site to use common javascript libraries from Google's AJAX 
@@ -14,7 +14,8 @@ Libraries CDN, rather than from Wordpress's own copies.
 A number of the javascript libraries distributed with Wordpress are also 
 hosted on Google's [AJAX Libraries API](http://code.google.com/apis/ajaxlibs/).
 This plugin allows your Wordpress site to use the content distribution 
-network side of Google's AJAX Library API, rather than serving these files from your Wordpress install directly.
+network side of Google's AJAX Library API, rather than serving these files from your 
+Wordpress install directly.
 
 This provides numerous potential performance benefits:
 
@@ -84,3 +85,20 @@ inspired by John Blackbourn's
 **[Google AJAX Libraries](http://lud.icro.us/wordpress-plugin-google-ajax-libraries/)**, 
 which has very similar goals to this plugin.
 
+== Changelog ==
+
+= 1.0.5 =
+
+Implimented a pair of
+[suggestions](http://jasonpenney.net/wordpress-plugins/use-google-libraries/comment-page-1/#comment-32427)
+from  [Peter  Wilson](http://peterwilson.cc/).
+
++ It should detect when a page is loaded over https and load the libraries over https accordingly
++ It no longer drops the micro version number from the url.  The reasons for this are twofold:
+  + It ensures the version requested is the version received.
+  + Google's servers set the expires header for 12 months for these urls, as opposed to 1 hour.  This allows clients to cache the file for up to a year without needing to retrieve it again from Google's servers.  If the version requested by your WordPress install changes, so will the URL so there's no worry that you'll keep loading an old version.
+
+== Future Plans ==
+
++ add ability to enable/disable loading from Google for specific libraries
++ add ability to request a newer version than your WordPress install registers by default
