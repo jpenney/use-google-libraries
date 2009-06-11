@@ -3,7 +3,7 @@
   Plugin Name: Use Google Libraries
   Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
   Description:Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from Wordpress's own copies. 
-  Version: 1.0.5
+  Version: 1.0.6
   Author: Jason Penney
   Author URI: http://jasonpenney.net/
 */ 
@@ -72,6 +72,10 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
       add_action( 'wp_default_scripts', array(&$this,"replace_default_scripts"),1000);
       add_filter( 'print_scripts_array',array(&$this,"jquery_noconflict"),1000);
       add_filter( 'script_loader_src', array(&$this,"remove_ver_query"),1000);
+
+      $this->persist_data = method_exists('_WP_Dependency','add_data');
+
+
     }
     
     /**
@@ -110,11 +114,27 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
       }
 
       foreach ($newscripts as $script) {
+        $oldscript = false;
+        if ($this->persist_data) {
+          $oldscript = $scripts->registered[$script->handle];
+        }
+
 	$scripts->remove( $script->handle );
 	// re-register with original ver
 	$scripts->add($script->handle, $script->src, $script->deps, $script->ver);
+        if ($oldscript) {
+          foreach ($oldscript->extra as $data_name => $data) {
+            $scripts->add_data($script->handle,$data_name,$data);
+          }
+        }
       }
       $scripts->add( 'jquery-noconflict', WP_PLUGIN_URL . '/use-google-libraries/js/jQnc.js', array('jquery-core'));
+      if ($this->persist_data && $scripts->registered['jquery'] ) {
+        $group = $scripts->registered['jquery']->extra['group'];
+        if ($group) {
+          $scripts->add_data('jquery-noconflict','group',$group);
+        }
+      }
     }
 
 
