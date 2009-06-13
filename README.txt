@@ -94,7 +94,7 @@ issues when some of the dependencies are outside of the concatenation.
 
 = 1.0.5 =
 
-Implimented a pair of
+Implemented a pair of
 [suggestions](http://jasonpenney.net/wordpress-plugins/use-google-libraries/comment-page-1/#comment-32427)
 from  [Peter  Wilson](http://peterwilson.cc/).
 
