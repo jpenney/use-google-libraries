@@ -86,6 +86,12 @@ which has very similar goals to this plugin.
 
 == Changelog ==
 
+= 1.0.6 = 
+
++ Disables script concatenation in WordPress 2.8, since it seems to have
+issues when some of the dependencies are outside of the concatenation.
++ Persists flag to load scripts in the footer in WordPress 2.8
+
 = 1.0.5 =
 
 Implimented a pair of

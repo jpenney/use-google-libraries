@@ -67,17 +67,26 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
                                       'scriptaculous-slider' => array('',''),
                                       'scriptaculous-sound' => array('',''),
                                       'mootools' => array('mootools','mootools-yui-compressed'),
-                                      'dojo' => array('dojo','dojo.xd')
+                                      'dojo' => array('dojo','dojo.xd'),
+                                      'swfobject' => array('swfobject','swfobject'),
+                                      'yui' => array('yui','build/yuiloader/yuiloader-min'),
+                                      'ext-core' => array('ext-core','ext-core')
                                       );
       add_action( 'wp_default_scripts', array(&$this,"replace_default_scripts"),1000);
       add_filter( 'print_scripts_array',array(&$this,"jquery_noconflict"),1000);
       add_filter( 'script_loader_src', array(&$this,"remove_ver_query"),1000);
-
-      $this->persist_data = method_exists('_WP_Dependency','add_data');
-
-
+      add_filter( 'init', array(&$this,"setup"));
     }
-    
+
+    /**
+     * Disables script concatination, which breaks when dependencies are not 
+     * all loaded locally
+     */
+    function setup() {
+      global $concatenate_scripts;
+      $concatenate_scripts = false;
+    }
+
     /**
      * Replace as many of the wordpress default script registrations as possible
      * with ones from google 
@@ -114,26 +123,19 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
       }
 
       foreach ($newscripts as $script) {
-        $oldscript = false;
-        if ($this->persist_data) {
-          $oldscript = $scripts->registered[$script->handle];
-        }
-
+        $olddata = $this->WP_Dependency_get_data($scripts, $script->handle);
 	$scripts->remove( $script->handle );
 	// re-register with original ver
 	$scripts->add($script->handle, $script->src, $script->deps, $script->ver);
-        if ($oldscript) {
-          foreach ($oldscript->extra as $data_name => $data) {
+        if ($olddata)
+          foreach ($olddata as $data_name => $data) {
             $scripts->add_data($script->handle,$data_name,$data);
           }
-        }
       }
       $scripts->add( 'jquery-noconflict', WP_PLUGIN_URL . '/use-google-libraries/js/jQnc.js', array('jquery-core'));
-      if ($this->persist_data && $scripts->registered['jquery'] ) {
-        $group = $scripts->registered['jquery']->extra['group'];
-        if ($group) {
-          $scripts->add_data('jquery-noconflict','group',$group);
-        }
+      $jqueryGroup = $this->WP_Dependency_get_data($scripts,'jquery','group');
+      if ($jqueryGroup) {
+        $scripts->add_data('jquery-noconflict','group',$jqueryGroup);;
       }
     }
 
@@ -150,6 +152,20 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
       }
       array_splice( $js_array, $jquery, 1, array('jquery','jquery-noconflict'));
       return $js_array;
+    }
+
+    function WP_Dependency_get_data( $dep_obj, $handle, $data_name = false) {
+      
+      if ( !method_exists($dep_obj,'add_data') )
+        return false;
+
+      if ( !isset($dep_obj->registered[$handle]) )
+        return false;
+
+      if (!$data_name)
+        return $dep_obj->registered[$handle]->extra;
+
+      return $dep_obj->registered[$handle]->extra[$data_name];
     }
 
     /** 
