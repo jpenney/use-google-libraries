@@ -41,6 +41,13 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
   
 
   class JCP_UseGoogleLibraries	{
+    var $google_scripts;
+    var $url;
+    var $path;
+    var $plugin;
+    var $optionsName;
+    var $version = '1.0.7';
+    
     /**
      * PHP 4 Compatible Constructor
      */
@@ -50,6 +57,18 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
      * PHP 5 Constructor
      */		
     function __construct(){
+      $this->name = plugin_basename(__FILE__);
+      if (function_exists('plugin_dir_url')) {
+        $this->url = plugin_dir_url(__FILE__);
+      } else  {
+        $this->url = trailingshashit(WP_PLUGIN_URL . $this->name);
+      }
+      if(function_exists('plugin_dir_path')) {
+        $this->path = plugin_dir_path(__FILE__);
+      } else {
+        $this->path = trailingshashit(WP_PLUGIN_DIR . $this->name);
+      }
+      $this->optionsName = $this->name . '-options';
       $this->google_scripts =   array(
                                       'jquery' => array( 'jquery','jquery.min'),
                                       'jquery-ui-core' => array('jqueryui','jquery-ui.min'),
@@ -72,9 +91,6 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
                                       'yui' => array('yui','build/yuiloader/yuiloader-min'),
                                       'ext-core' => array('ext-core','ext-core')
                                       );
-      add_action( 'wp_default_scripts', array(&$this,"replace_default_scripts"),1000);
-      add_filter( 'print_scripts_array',array(&$this,"jquery_noconflict"),1000);
-      add_filter( 'script_loader_src', array(&$this,"remove_ver_query"),1000);
       add_filter( 'init', array(&$this,"setup"));
     }
 
@@ -85,6 +101,11 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
     function setup() {
       global $concatenate_scripts;
       $concatenate_scripts = false;
+      add_action( 'wp_default_scripts', array(&$this,"replace_default_scripts"),1000);
+      add_filter( 'print_scripts_array',array(&$this,"jquery_noconflict"),1000);
+      add_filter( 'script_loader_src', array(&$this,"remove_ver_query"),1000);
+      add_filter("plugin_action_links_".$this->name, 
+                 array(&$this,"action_links"));
     }
 
     /**
@@ -132,13 +153,15 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
         $olddata = $this->WP_Dependency_get_data($scripts, $script->handle);
 	$scripts->remove( $script->handle );
 	// re-register with original ver
-	$scripts->add($script->handle, $script->src, $script->deps, $script->ver);
+	$scripts->add($script->handle, $script->src, $script->deps, 
+                      $script->ver);
         if ($olddata)
           foreach ($olddata as $data_name => $data) {
             $scripts->add_data($script->handle,$data_name,$data);
           }
       }
-      $scripts->add( 'jquery-noconflict', WP_PLUGIN_URL . '/use-google-libraries/js/jQnc.js', array('jquery-core'));
+      $scripts->add( 'jquery-noconflict', $this->url . '/js/jQnc.js',
+                     array('jquery-core'));
       $jqueryGroup = $this->WP_Dependency_get_data($scripts,'jquery','group');
       if ($jqueryGroup) {
         $scripts->add_data('jquery-noconflict','group',$jqueryGroup);;
@@ -174,6 +197,13 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
       return $dep_obj->registered[$handle]->extra[$data_name];
     }
 
+    function action_links( $links ) {
+      $settings_link = '<a href="options-general.php?page='.__FILE__.
+        '">Settings</a>';
+      array_unshift($links,$settings_link);
+      return $links;
+    }
+
     /** 
      * Remove 'ver' from query string for scripts loaded from Google's
      * CDN
@@ -188,6 +218,43 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
       return $src;
     }
 
+    function admin_init() {
+      register_setting($this->optionsName, 'settings_saved');
+      register_setting($this->optionsName, 'safe_versions');
+      register_setting($this->optionsName, 'last_tested');
+      register_setting($this->optionsName, 'options_version');
+    }
+
+    var $_options = null;
+    function get_options() {
+      if ($this->_options == null) {
+        $options = array('settings_saved' => false,
+                         'safe_versions' => Array(),
+                         'last_tested' => 0,
+                         'options_version' => $this->version
+                         );
+        $savedOptions = get_option($this->optionsName);
+        if (!empty($savedOptions)) {
+          foreach($savedOptions as $key => $value) {
+            $options[$key] = $value;
+          }
+          $this->_options =$options;
+          $this->saveOptions();
+        }
+      }
+      return $this->_options;
+    }
+    
+    function save_options() {
+      if ($this->_options != null) {
+        update_option($this->optionsName,$this->_options);
+      }
+    }
+
+    function get_option($key) {
+      $this->get_options();
+      return $this->_options[$key];
+    }
   }
 }
 
