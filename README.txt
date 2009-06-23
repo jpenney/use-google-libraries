@@ -4,7 +4,7 @@ Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API
 Requires at least: 2.6
 Tested up to: 2.8
-Stable tag: 1.0.6.1
+Stable tag: 1.0.7
 
 Allows your site to use common javascript libraries from Google's AJAX 
 Libraries CDN, rather than from Wordpress's own copies.
@@ -51,6 +51,12 @@ available indefinitely, so you shouldn't need to worry about them
 disappearing.  
 
 == Changelog ==
+
+= 1.0.7 =
+
++ Quick and dirty workaround for scriptaculous loading (thanks to
+[Gregory Lam for bringing it to my
+attention](https://twitter.com/gregorylam/statuses/2279304842)
 
 = 1.0.6.1 =
 
