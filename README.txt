@@ -52,6 +52,10 @@ disappearing.
 
 == Changelog ==
 
+= 1.0.7.1 =
+
++ fix previous fix (whoops!)
+
 = 1.0.7 =
 
 + Quick and dirty workaround for scriptaculous loading (thanks to
