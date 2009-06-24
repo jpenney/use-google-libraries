@@ -105,7 +105,7 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
 
           // TODO: replace with more flexible option
           // quick and dirty work around for scriptaculous 1.8.0
-          if (strpos($name,'scriptaculous') == 0  && $ver = '1.8.0') {
+          if ($name == 'scriptaculous-root' && $ver == '1.8.0') {
             $ver = '1.8';
           }
 
