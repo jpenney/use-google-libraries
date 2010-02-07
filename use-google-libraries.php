@@ -3,7 +3,7 @@
   Plugin Name: Use Google Libraries
   Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
   Description:Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from Wordpress's own copies. 
-  Version: 1.0.7
+  Version: 1.0.9
   Author: Jason Penney
   Author URI: http://jasonpenney.net/
 */ 
@@ -28,7 +28,6 @@
 
 if (!class_exists('JCP_UseGoogleLibraries')) {
 
-  $google_scripts;
 
   if ( ! defined( 'WP_CONTENT_URL' ) )
     define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
@@ -39,15 +38,21 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
   if ( ! defined( 'WP_PLUGIN_DIR' ) )
     define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
   
-
   class JCP_UseGoogleLibraries	{
-    var $google_scripts;
-    var $url;
-    var $path;
-    var $plugin;
-    var $optionsName;
-    var $version = '1.0.7';
-    
+
+    private static $instance;
+
+    public static function get_instance() {
+      if (!isset(self::$instance)) {
+        self::$instance =  new JCP_UseGoogleLibraries();
+      }
+      return self::$instance;
+    }
+
+    protected $google_scripts;
+    protected $noconflict_url;
+    protected $noconflict_next;
+    protected $is_ssl;
     /**
      * PHP 4 Compatible Constructor
      */
@@ -57,42 +62,66 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
      * PHP 5 Constructor
      */		
     function __construct(){
-      $this->name = plugin_basename(__FILE__);
-      if (function_exists('plugin_dir_url')) {
-        $this->url = plugin_dir_url(__FILE__);
-      } else  {
-        $this->url = trailingshashit(WP_PLUGIN_URL . $this->name);
+      $this->google_scripts =   
+        array(
+              'jquery' => array( 'jquery','jquery.min'),
+              'jquery-ui-core' => array('jqueryui','jquery-ui.min'),
+              'jquery-ui-tabs' => array('',''),
+              'jquery-ui-sortable' => array('',''),
+              'jquery-ui-draggable' => array('',''),
+              'jquery-ui-resizable' => array('',''),
+              'jquery-ui-dialog' => array('',''),
+              'prototype' => array('prototype','prototype'),
+              'scriptaculous-root' => array('scriptaculous', 'scriptaculous'),
+              'scriptaculous-builder' => array('',''),
+              'scriptaculous-effects' => array('',''),
+              'scriptaculous-dragdrop' => array('',''),
+              'scriptaculous-controls' => array('',''),
+              'scriptaculous-slider' => array('',''),
+              'scriptaculous-sound' => array('',''),
+              'mootools' => array('mootools','mootools-yui-compressed'),
+              'dojo' => array('dojo','dojo.xd'),
+              'swfobject' => array('swfobject','swfobject'),
+              'yui' => array('yui','build/yuiloader/yuiloader-min'),
+              'ext-core' => array('ext-core','ext-core')
+              );
+      $this->noconflict_url = WP_PLUGIN_URL . '/use-google-libraries/js/jQnc.js';
+
+      $this->noconflict_next = FALSE;
+      // test for SSL
+      // thanks to suggestions from Peter Wilson (http://peterwilson.cc/)
+      // and Richard Hearne
+      $is_ssl = false;
+      if ((function_exists('getenv') AND 
+           ((getenv('HTTPS') != '' AND getenv('HTTPS') != 'off')
+            OR
+            (getenv('SERVER_PORT') == '433')))
+          OR
+          (isset($_SERVER) AND
+           ((isset($_SERVER['HTTPS']) AND $_SERVER['https'] !='' AND $_SERVER['HTTPS'] != 'off')
+            OR
+            (isset($_SERVER['SERVER_PORT']) AND $_SERVER['SERVER_PORT'] == '443')))) {
+        $is_ssl = true;
       }
-      if(function_exists('plugin_dir_path')) {
-        $this->path = plugin_dir_path(__FILE__);
-      } else {
-        $this->path = trailingshashit(WP_PLUGIN_DIR . $this->name);
-      }
-      $this->optionsName = $this->name . '-options';
-      $this->google_scripts =   array(
-                                      'jquery' => array( 'jquery','jquery.min'),
-                                      'jquery-ui-core' => array('jqueryui','jquery-ui.min'),
-                                      'jquery-ui-tabs' => array('',''),
-                                      'jquery-ui-sortable' => array('',''),
-                                      'jquery-ui-draggable' => array('',''),
-                                      'jquery-ui-resizable' => array('',''),
-                                      'jquery-ui-dialog' => array('',''),
-                                      'prototype' => array('prototype','prototype'),
-                                      'scriptaculous-root' => array('scriptaculous', 'scriptaculous'),
-                                      'scriptaculous-builder' => array('',''),
-                                      'scriptaculous-effects' => array('',''),
-                                      'scriptaculous-dragdrop' => array('',''),
-                                      'scriptaculous-controls' => array('',''),
-                                      'scriptaculous-slider' => array('',''),
-                                      'scriptaculous-sound' => array('',''),
-                                      'mootools' => array('mootools','mootools-yui-compressed'),
-                                      'dojo' => array('dojo','dojo.xd'),
-                                      'swfobject' => array('swfobject','swfobject'),
-                                      'yui' => array('yui','build/yuiloader/yuiloader-min'),
-                                      'ext-core' => array('ext-core','ext-core')
-                                      );
-      add_filter( 'init', array(&$this,"setup"));
+      $this->is_ssl = $is_ssl;
     }
+
+    static function configure_plugin() {
+      add_action( 'wp_default_scripts', 
+                  'JCP_UseGoogleLibraries::replace_default_scripts_action',
+                  1000);
+      add_filter( 'script_loader_src', 
+                  "JCP_UseGoogleLibraries::remove_ver_query_filter",1000);
+      add_filter( 'init',"JCP_UseGoogleLibraries::setup_filter");
+
+    }
+
+
+    static function setup_filter() {
+      $ugl =  self::get_instance();
+      $ugl->setup();
+    }
+
 
     /**
      * Disables script concatination, which breaks when dependencies are not 
@@ -101,11 +130,12 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
     function setup() {
       global $concatenate_scripts;
       $concatenate_scripts = false;
-      add_action( 'wp_default_scripts', array(&$this,"replace_default_scripts"),1000);
-      add_filter( 'print_scripts_array',array(&$this,"jquery_noconflict"),1000);
-      add_filter( 'script_loader_src', array(&$this,"remove_ver_query"),1000);
-      add_filter("plugin_action_links_".$this->name, 
-                 array(&$this,"action_links"));
+    }
+
+
+    static function replace_default_scripts_action( &$scripts ) {
+      $ugl = self::get_instance();
+      $ugl->replace_default_scripts( $scripts );
     }
 
     /**
@@ -126,7 +156,7 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
 
           // TODO: replace with more flexible option
           // quick and dirty work around for scriptaculous 1.8.0
-          if (strpos($name,'scriptaculous')  && $ver = '1.8.0') {
+          if ($name == 'scriptaculous-root' && $ver == '1.8.0') {
             $ver = '1.8';
           }
 
@@ -136,9 +166,8 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
 	  if ($lib != '') {
 	    // build new URL
 	    $script->src = "http://ajax.googleapis.com/ajax/libs/$lib/$ver/$js.js";
-            // test for SSL
-            // thanks to suggestion from Peter Wilson (http://peterwilson.cc/)
-            if ((isset($_SERVER['HTTPS'])) AND ($_SERVER['HTTPS'] != ”) AND ($_SERVER['HTTPS'] != ‘off’)) {
+            
+            if ($this->is_ssl) {
               //use ssl
               $script->src = preg_replace('/^http:/', 'https:', $script->src);
             }
@@ -153,35 +182,15 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
         $olddata = $this->WP_Dependency_get_data($scripts, $script->handle);
 	$scripts->remove( $script->handle );
 	// re-register with original ver
-	$scripts->add($script->handle, $script->src, $script->deps, 
-                      $script->ver);
+	$scripts->add($script->handle, $script->src, $script->deps, $script->ver);
         if ($olddata)
           foreach ($olddata as $data_name => $data) {
             $scripts->add_data($script->handle,$data_name,$data);
           }
       }
-      $scripts->add( 'jquery-noconflict', $this->url . '/js/jQnc.js',
-                     array('jquery-core'));
-      $jqueryGroup = $this->WP_Dependency_get_data($scripts,'jquery','group');
-      if ($jqueryGroup) {
-        $scripts->add_data('jquery-noconflict','group',$jqueryGroup);;
-      }
+
     }
 
-
-    /** 
-     * Ensure jQuery is loaded in noConflict mode
-     *
-     * @param array $js_array JavaScript scripts array
-     * @return array Updated scripts array, if needed
-     */
-    function jquery_noconflict( $js_array ) {
-      if ( false === $jquery = array_search( 'jquery', $js_array ) ) {
-        return $js_array;
-      }
-      array_splice( $js_array, $jquery, 1, array('jquery','jquery-noconflict'));
-      return $js_array;
-    }
 
     function WP_Dependency_get_data( $dep_obj, $handle, $data_name = false) {
       
@@ -197,12 +206,6 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
       return $dep_obj->registered[$handle]->extra[$data_name];
     }
 
-    function action_links( $links ) {
-      $settings_link = '<a href="options-general.php?page='.__FILE__.
-        '">Settings</a>';
-      array_unshift($links,$settings_link);
-      return $links;
-    }
 
     /** 
      * Remove 'ver' from query string for scripts loaded from Google's
@@ -212,53 +215,27 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
      * @return string Updated src attribute
      */
     function remove_ver_query ($src) {
+      if ($this->noconflict_next) {
+        $this->noconflict_next = FALSE;
+        echo "<script type='text/javascript'>try{jQuery.noConflict();}catch(e){};</script>\n";
+      }
       if ( preg_match( '/ajax\.googleapis\.com\//', $src ) ) {
 	$src = remove_query_arg('ver',$src);
-      }
+        if (strpos($src,$this->google_scripts['jquery'][1] . ".js")) {
+          $this->noconflict_next = TRUE;
+        }
+      } 
       return $src;
     }
 
-    function admin_init() {
-      register_setting($this->optionsName, 'settings_saved');
-      register_setting($this->optionsName, 'safe_versions');
-      register_setting($this->optionsName, 'last_tested');
-      register_setting($this->optionsName, 'options_version');
-    }
-
-    var $_options = null;
-    function get_options() {
-      if ($this->_options == null) {
-        $options = array('settings_saved' => false,
-                         'safe_versions' => Array(),
-                         'last_tested' => 0,
-                         'options_version' => $this->version
-                         );
-        $savedOptions = get_option($this->optionsName);
-        if (!empty($savedOptions)) {
-          foreach($savedOptions as $key => $value) {
-            $options[$key] = $value;
-          }
-          $this->_options =$options;
-          $this->saveOptions();
-        }
-      }
-      return $this->_options;
-    }
-    
-    function save_options() {
-      if ($this->_options != null) {
-        update_option($this->optionsName,$this->_options);
-      }
-    }
-
-    function get_option($key) {
-      $this->get_options();
-      return $this->_options[$key];
+    static function remove_ver_query_filter ($src) {
+      $ugl =  self::get_instance();
+      return $ugl->remove_ver_query($src);
     }
   }
 }
 
 //instantiate the class
-if (class_exists('JCP_UseGoogleLibraries')) {
-  $JCP_UseGoogleLibraries = new JCP_UseGoogleLibraries();
+if (class_exists('JCP_UseGoogleLibraries')){
+    JCP_UseGoogleLibraries::configure_plugin();
 }
