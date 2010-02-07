@@ -76,7 +76,7 @@ As of version 2.0b2 enabling this plugin prevents UGL from loading due
 to it enqueing jQuery before 'init'. 
 
 
-== Incompatable Themes ==
+== Incompatible Themes ==
 
 = K2 =
 
@@ -85,7 +85,12 @@ using K2.
 
 == Changelog ==
 
-= 1.0.8 =
+= 1.0.9.1 =
+
++ Added **Incompatible Plugins** and **Incompatible Themes** sections
+to the README
+
+= 1.0.9 =
 
 + more https detection
 + inline jQuery.noConflict()
