@@ -2,9 +2,9 @@
 Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API
-Requires at least: 2.6
-Tested up to: 2.9
-Stable tag: 1.0.7.1
+Requires at least: 2.9.1
+Tested up to: 2.9.1
+Stable tag: 1.0.9.1
 
 Allows your site to use common javascript libraries from Google's AJAX 
 Libraries CDN, rather than from Wordpress's own copies.
@@ -35,6 +35,7 @@ you](http://encosia.com/2008/12/10/3-reasons-why-you-should-let-google-host-jque
 * [MooTools](http://mootools.net/)
 * [Prototype](http://www.prototypejs.org/)
 * [script.aculo.us](http://script.aculo.us/)
+* [swfobject](http://code.google.com/p/swfobject/)
 
 == Installation ==
 
@@ -50,7 +51,44 @@ Google has stated that they intend to keep every file they've hosted
 available indefinitely, so you shouldn't need to worry about them 
 disappearing.  
 
+= Why isn't in doing anything? =
+
+Firstly, if you are using a caching plugin, flush the cache or
+temporarily disable it to be sure it's not doing anything.  That said,
+I've done my best to make **Use Google Libraries** gracefully step out
+of the way when things are not as expected.  While not, perhaps,
+giving you the greatest benefit it helps ensure you site doesn't just
+flat out stop working.
+
+In general, anything that calls wp_eneque_script before 'init' will
+stop **Use Google Libraries** from loading.  Please see the section on
+**Incompatible Plugins** and **Incompatible Themes** for specific
+information. 
+
+
+
+== Incompatible Plugins ==
+
+
+= Popularity Contest =
+
+As of version 2.0b2 enabling this plugin prevents UGL from loading due
+to it enqueing jQuery before 'init'. 
+
+
+== Incompatable Themes ==
+
+= K2 =
+
+I've had scattered reports that UGL is stepping out of the way when
+using K2.
+
 == Changelog ==
+
+= 1.0.8 =
+
++ more https detection
++ inline jQuery.noConflict()
 
 = 1.0.7.1 =
 
