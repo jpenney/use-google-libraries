@@ -4,7 +4,7 @@ Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API
 Requires at least: 2.9.1
 Tested up to: 2.9.1
-Stable tag: 1.0.9.1
+Stable tag: 1.0.9.2
 
 Allows your site to use common javascript libraries from Google's AJAX 
 Libraries CDN, rather than from Wordpress's own copies.
@@ -84,6 +84,10 @@ I've had scattered reports that UGL is stepping out of the way when
 using K2.
 
 == Changelog ==
+
+= 1.0.9.2 =
+
++ Hopefully fix issue with plugin loading for some users
 
 = 1.0.9.1 =
 
