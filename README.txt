@@ -1,13 +1,13 @@
 === Use Google Libraries ===
 Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
-Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API
+Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API, YSlow, Page Speed
 Requires at least: 2.9.1
-Tested up to: 2.9.1
-Stable tag: 1.0.9.2
+Tested up to: 3.0
+Stable tag: 1.1
 
 Allows your site to use common javascript libraries from Google's AJAX 
-Libraries CDN, rather than from Wordpress's own copies.
+Libraries CDN, rather than from WordPress's own copies.
 
 == Description ==
 
@@ -60,21 +60,16 @@ of the way when things are not as expected.  While not, perhaps,
 giving you the greatest benefit it helps ensure you site doesn't just
 flat out stop working.
 
-In general, anything that calls wp_eneque_script before 'init' will
-stop **Use Google Libraries** from loading.  Please see the section on
-**Incompatible Plugins** and **Incompatible Themes** for specific
-information. 
+In general, anything that calls wp_register_script and/or
+wp_eneque_script before 'init' causes trouble for **Use Google
+Libraries**.  I've made an effort to force it to try and run anyhow,
+so please report any issues with this.  If you have 'WP_DEBUG'
+enabled, a message will be logged letting you know this is happening.
 
-
+Please see the section on **Incompatible Plugins** and
+**Incompatible Themes** for specific information. 
 
 == Incompatible Plugins ==
-
-
-= Popularity Contest =
-
-As of version 2.0b2 enabling this plugin prevents UGL from loading due
-to it enqueing jQuery before 'init'. 
-
 
 == Incompatible Themes ==
 
@@ -84,6 +79,15 @@ I've had scattered reports that UGL is stepping out of the way when
 using K2.
 
 == Changelog ==
+
+= 1.1 =
+
++ No longer disable script concatenation when using WordPress 3.0 or
+greater
++ Attempt to detect when another plugin or theme has called
+'wp_register_script' and/or 'wp_enque_script' before 'init' and work
+around it.
++ Limited debugging output when WP_DEBUG is enabled.
 
 = 1.0.9.2 =
 
@@ -164,7 +168,8 @@ improves the chances of the given URL already being cached, and prevents
 
 == References ==
 
-Parts of this plugin (specificly, the dropping of the micro number) were 
+Parts of this plugin (specificly, the dropping of the micro number,
+which has since been removed for better caching performance) were 
 inspired by John Blackbourn's 
 **[Google AJAX Libraries](http://lud.icro.us/wordpress-plugin-google-ajax-libraries/)**, 
 which has very similar goals to this plugin.
