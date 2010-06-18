@@ -3,7 +3,7 @@
   Plugin Name: Use Google Libraries
   Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
   Description:Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from Wordpress's own copies. 
-  Version: 1.0.9.2
+  Version: 1.1
   Author: Jason Penney
   Author URI: http://jasonpenney.net/
 */ 
@@ -53,6 +53,9 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
     protected $noconflict_url;
     protected $noconflict_next;
     protected $is_ssl;
+    protected static $script_before_init_notice =
+      '<strong>Use Google Libraries</strong>: Another plugin has registered or enqued a script before the "init" action.  Attempting to work around it.';
+
     /**
      * PHP 4 Compatible Constructor
      */
@@ -107,6 +110,7 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
     }
 
     static function configure_plugin() {
+
       add_action( 'wp_default_scripts', 
                   array( 'JCP_UseGoogleLibraries',
                          'replace_default_scripts_action'),
@@ -114,24 +118,52 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
       add_filter( 'script_loader_src', 
                   array( "JCP_UseGoogleLibraries", "remove_ver_query_filter" ),
                   1000);
-      add_filter( 'init',array( "JCP_UseGoogleLibraries", "setup_filter" ));
+      add_filter( 'init',array( "JCP_UseGoogleLibraries", "setup_filter" ) );
 
+      // There's a chance some plugin has called wp_enqueue_script outside 
+      // of any hooks, which means that this plugin's 'wp_default_scripts' 
+      // hook will never get a chance to fire.  This tries to work around 
+      // that.
+      global $wp_scripts;
+      if ( is_a($wp_scripts, 'WP_Scripts') ) {
+        if( WP_DEBUG !== false ) {
+          error_log(self::$script_before_init_notice);
+        }
+        /*      
+        if ( is_admin() ) {
+          add_action('admin_notices',
+                     array("JCP_UseGoogleLibraries",
+                           'script_before_init_admin_notice'));
+        }
+        */
+        $ugl =  self::get_instance();
+        $ugl->replace_default_scripts( $wp_scripts );
+      }
     }
 
+
+    static function script_before_init_admin_notice() {
+      echo '<div class="error fade"><p>' . self::$script_before_init_notice . '</p></div>';
+    }
 
     static function setup_filter() {
       $ugl =  self::get_instance();
       $ugl->setup();
     }
 
-
     /**
      * Disables script concatination, which breaks when dependencies are not 
-     * all loaded locally
+     * all loaded locally.
+     *
+     * I retested this in version 3.0 and it seems to be working fine when 
+     * concatenation is enabled, so for now I'm only disabling in older
+     * versions.
      */
     function setup() {
-      global $concatenate_scripts;
-      $concatenate_scripts = false;
+      global $concatenate_scripts, $wp_version;
+      if (version_compare($wp_version, '3.0') < 0) {
+      	$concatenate_scripts = false;
+      }
     }
 
 
@@ -239,5 +271,6 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
 
 //instantiate the class
 if (class_exists('JCP_UseGoogleLibraries')){
-    JCP_UseGoogleLibraries::configure_plugin();
+  JCP_UseGoogleLibraries::configure_plugin();
 }
+
