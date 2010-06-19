@@ -4,7 +4,7 @@ Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API, YSlow, Page Speed
 Requires at least: 2.9.1
 Tested up to: 3.0
-Stable tag: 1.1
+Stable tag: 1.1.0.1
 
 Allows your site to use common javascript libraries from Google's AJAX 
 Libraries CDN, rather than from WordPress's own copies.
@@ -80,6 +80,10 @@ using K2.
 
 == Changelog ==
 
+= 1.1.0.1 =
+
++ Re-disable script concatenation.  Seemed to break widget admin page.
+
 = 1.1 =
 
 + No longer disable script concatenation when using WordPress 3.0 or
@@ -138,6 +142,13 @@ from  [Peter  Wilson](http://peterwilson.cc/).
   servers.  If the version requested by your WordPress install
   changes, so will the URL so there's no worry that you'll keep
   loading an old version.
+
+== A Request ==
+
+If you're going to flag the plugin as "broken" in the WordPress Plugin
+Directory, please try and [let me know *what* is
+broken](http://wordpress.org/tags/use-google-libraries?forum_id=10).
+I'm not a mind reader.
 
 == Technical Details ==
 
