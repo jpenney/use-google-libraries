@@ -3,7 +3,7 @@
   Plugin Name: Use Google Libraries
   Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
   Description:Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from Wordpress's own copies. 
-  Version: 1.1
+  Version: 1.1.0.1
   Author: Jason Penney
   Author URI: http://jasonpenney.net/
 */ 
@@ -154,16 +154,10 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
     /**
      * Disables script concatination, which breaks when dependencies are not 
      * all loaded locally.
-     *
-     * I retested this in version 3.0 and it seems to be working fine when 
-     * concatenation is enabled, so for now I'm only disabling in older
-     * versions.
      */
     function setup() {
       global $concatenate_scripts, $wp_version;
-      if (version_compare($wp_version, '3.0') < 0) {
-      	$concatenate_scripts = false;
-      }
+      $concatenate_scripts = false;
     }
 
 
