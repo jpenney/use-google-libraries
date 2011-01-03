@@ -3,7 +3,7 @@
   Plugin Name: Use Google Libraries
   Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
   Description:Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from Wordpress's own copies. 
-  Version: 1.0.9.2
+  Version: 1.1.2
   Author: Jason Penney
   Author URI: http://jasonpenney.net/
 */ 
@@ -27,7 +27,6 @@
 */
 
 if (!class_exists('JCP_UseGoogleLibraries')) {
-
 
   if ( ! defined( 'WP_CONTENT_URL' ) )
     define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
@@ -53,6 +52,9 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
     protected $noconflict_url;
     protected $noconflict_next;
     protected $is_ssl;
+    protected static $script_before_init_notice =
+      '<strong>Use Google Libraries</strong>: Another plugin has registered or enqued a script before the "init" action.  Attempting to work around it.';
+
     /**
      * PHP 4 Compatible Constructor
      */
@@ -64,14 +66,53 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
     function __construct(){
       $this->google_scripts =   
         array(
+              // any extra scripts listed here not provided by WordPress 
+              // or another plugin will not be registered.  This liste
+              // is just used to chancge where things load from.
+
+              /* jQuery */
               'jquery' => array( 'jquery','jquery.min'),
+
+              /* jQuery UI */
               'jquery-ui-core' => array('jqueryui','jquery-ui.min'),
-              'jquery-ui-tabs' => array('',''),
-              'jquery-ui-sortable' => array('',''),
-              'jquery-ui-draggable' => array('',''),
-              'jquery-ui-resizable' => array('',''),
+              'jquery-ui-accordion' => array('',''),
+              'jquery-ui-autocomplete' => array('',''), /* jQueri UI 1.8 */
+              'jquery-ui-button' => array('',''), /* jQuery UI 1.8 */
+              'jquery-ui-datepicker' => array('',''),
               'jquery-ui-dialog' => array('',''),
+              'jquery-ui-draggable' => array('',''),
+              'jquery-ui-droppable' => array('',''),
+              'jquery-ui-menu' => array('',''),
+              'jquery-ui-mouse' => array('',''),  /* jQuery UI 1.8 */
+              'jquery-ui-position' => array('',''),  /* jQuery UI 1.8 */
+              'jquery-ui-progressbar' => array('',''),
+              'jquery-ui-resizable' => array('',''),
+              'jquery-ui-selectable' => array('',''),
+              'jquery-ui-slider' => array('',''),
+              'jquery-ui-sortable' => array('',''),
+              'jquery-ui-tabs' => array('',''),
+              'jquery-ui-widget' => array('',''),  /* jQuery UI 1.8 */
+
+              /* jQuery Effects */
+              'jquery-effects-core' => array('',''),
+              'jquery-effects-blind' => array('',''),
+              'jquery-effects-bounce' => array('',''),
+              'jquery-effects-clip' => array('',''),
+              'jquery-effects-drop' => array('',''),
+              'jquery-effects-explode' => array('',''),
+              'jquery-effects-fade' => array('',''),  /* jQuery UI 1.8 */
+              'jquery-effects-fold' => array('',''),
+              'jquery-effects-highlight' => array('',''),
+              'jquery-effects-pulsate' => array('',''),
+              'jquery-effects-scale' => array('',''),
+              'jquery-effects-shake' => array('',''),
+              'jquery-effects-slide' => array('',''),
+              'jquery-effects-transfer' => array('',''),
+
+              /* prototype */
               'prototype' => array('prototype','prototype'),
+
+              /* scriptaculous */
               'scriptaculous-root' => array('scriptaculous', 'scriptaculous'),
               'scriptaculous-builder' => array('',''),
               'scriptaculous-effects' => array('',''),
@@ -79,11 +120,22 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
               'scriptaculous-controls' => array('',''),
               'scriptaculous-slider' => array('',''),
               'scriptaculous-sound' => array('',''),
+
+              /* moo tools */
               'mootools' => array('mootools','mootools-yui-compressed'),
+
+              /* Dojo */
               'dojo' => array('dojo','dojo.xd'),
+
+              /* swfobject */
               'swfobject' => array('swfobject','swfobject'),
+
+              /* YUI */
               'yui' => array('yui','build/yuiloader/yuiloader-min'),
+
+              /* Ext Core */
               'ext-core' => array('ext-core','ext-core')
+
               );
       $this->noconflict_url = WP_PLUGIN_URL . '/use-google-libraries/js/jQnc.js';
 
@@ -114,24 +166,47 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
       add_filter( 'script_loader_src', 
                   array( "JCP_UseGoogleLibraries", "remove_ver_query_filter" ),
                   1000);
-      add_filter( 'init',array( "JCP_UseGoogleLibraries", "setup_filter" ));
+      add_filter( 'init',array( "JCP_UseGoogleLibraries", "setup_filter" ) );
 
+      // There's a chance some plugin has called wp_enqueue_script outside 
+      // of any hooks, which means that this plugin's 'wp_default_scripts' 
+      // hook will never get a chance to fire.  This tries to work around 
+      // that.
+      global $wp_scripts;
+      if ( is_a($wp_scripts, 'WP_Scripts') ) {
+        if( WP_DEBUG !== false ) {
+          error_log(self::$script_before_init_notice);
+        }
+        /*      
+        if ( is_admin() ) {
+          add_action('admin_notices',
+                     array("JCP_UseGoogleLibraries",
+                           'script_before_init_admin_notice'));
+        }
+        */
+        $ugl =  self::get_instance();
+        $ugl->replace_default_scripts( $wp_scripts );
+      }
     }
 
+
+    static function script_before_init_admin_notice() {
+      echo '<div class="error fade"><p>' . self::$script_before_init_notice . '</p></div>';
+    }
 
     static function setup_filter() {
       $ugl =  self::get_instance();
       $ugl->setup();
     }
 
-
     /**
      * Disables script concatination, which breaks when dependencies are not 
-     * all loaded locally
+     * all loaded locally.
      */
     function setup() {
       global $concatenate_scripts;
       $concatenate_scripts = false;
+      
     }
 
 
@@ -160,6 +235,10 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
           // quick and dirty work around for scriptaculous 1.8.0
           if ($name == 'scriptaculous-root' && $ver == '1.8.0') {
             $ver = '1.8';
+          }
+
+          if ($name == 'jquery-effects-core') {
+            $script->deps[] = 'jquery-ui-core';
           }
 
           // if $lib is empty, then this script does not need to be 
@@ -239,5 +318,8 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
 
 //instantiate the class
 if (class_exists('JCP_UseGoogleLibraries')){
-    JCP_UseGoogleLibraries::configure_plugin();
+  JCP_UseGoogleLibraries::configure_plugin();
 }
+
+
+
