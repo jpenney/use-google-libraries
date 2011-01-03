@@ -3,8 +3,8 @@ Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API, YSlow, Page Speed
 Requires at least: 2.9.1
-Tested up to: 3.0
-Stable tag: 1.1.0.1
+Tested up to: 3.2
+Stable tag: 1.1.2
 
 Allows your site to use common javascript libraries from Google's AJAX 
 Libraries CDN, rather than from WordPress's own copies.
@@ -80,6 +80,10 @@ using K2.
 
 == Changelog ==
 
+= 1.1.2 =
+
++ Updated jQuery UI to work with WordPress 3.2rc1
+
 = 1.1.0.1 =
 
 + Re-disable script concatenation.  Seemed to break widget admin page.
@@ -143,6 +147,11 @@ from  [Peter  Wilson](http://peterwilson.cc/).
   changes, so will the URL so there's no worry that you'll keep
   loading an old version.
 
+== Upgrade Notice ==
+
+= 1.1.2 =
+Updated for better WordPress 3.2 compatibility.
+
 == A Request ==
 
 If you're going to flag the plugin as "broken" in the WordPress Plugin
@@ -161,13 +170,6 @@ registered, and replaces the standard registrations `src` with ones that
 point to Google's servers.  Other attributes (like dependencies) are left 
 intact.
 
-= print_scripts_array =
-
-If jQuery is enqued **Use Google Libraries** will inject a small javascript file 
-to ensure that it is running in 
-[noConflict mode](http://docs.jquery.com/Core/jQuery.noConflict) as it would 
-with the standard WordPress version.
-
 = script_loader_src =
 
 **Use Google Libraries** removes the `ver=x.y.z` query string from the URL
@@ -176,6 +178,9 @@ used to load the requested library *if* it is going to load the library from
 improves the chances of the given URL already being cached, and prevents 
 **script.aculo.us** from including scripts multiple times.
 
+If jQuery is enqued **Use Google Libraries** will inject a bit of
+javascript before the next enqueued script enabling jQuery's [noConflict mode](http://docs.jquery.com/Core/jQuery.noConflict) as it would 
+with the standard WordPress version.
 
 == References ==
 

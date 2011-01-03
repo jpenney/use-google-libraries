@@ -3,7 +3,7 @@
   Plugin Name: Use Google Libraries
   Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
   Description:Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from Wordpress's own copies. 
-  Version: 1.1.0.1
+  Version: 1.1.2
   Author: Jason Penney
   Author URI: http://jasonpenney.net/
 */ 
@@ -27,7 +27,6 @@
 */
 
 if (!class_exists('JCP_UseGoogleLibraries')) {
-
 
   if ( ! defined( 'WP_CONTENT_URL' ) )
     define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
@@ -67,14 +66,53 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
     function __construct(){
       $this->google_scripts =   
         array(
+              // any extra scripts listed here not provided by WordPress 
+              // or another plugin will not be registered.  This liste
+              // is just used to chancge where things load from.
+
+              /* jQuery */
               'jquery' => array( 'jquery','jquery.min'),
+
+              /* jQuery UI */
               'jquery-ui-core' => array('jqueryui','jquery-ui.min'),
-              'jquery-ui-tabs' => array('',''),
-              'jquery-ui-sortable' => array('',''),
-              'jquery-ui-draggable' => array('',''),
-              'jquery-ui-resizable' => array('',''),
+              'jquery-ui-accordion' => array('',''),
+              'jquery-ui-autocomplete' => array('',''), /* jQueri UI 1.8 */
+              'jquery-ui-button' => array('',''), /* jQuery UI 1.8 */
+              'jquery-ui-datepicker' => array('',''),
               'jquery-ui-dialog' => array('',''),
+              'jquery-ui-draggable' => array('',''),
+              'jquery-ui-droppable' => array('',''),
+              'jquery-ui-menu' => array('',''),
+              'jquery-ui-mouse' => array('',''),  /* jQuery UI 1.8 */
+              'jquery-ui-position' => array('',''),  /* jQuery UI 1.8 */
+              'jquery-ui-progressbar' => array('',''),
+              'jquery-ui-resizable' => array('',''),
+              'jquery-ui-selectable' => array('',''),
+              'jquery-ui-slider' => array('',''),
+              'jquery-ui-sortable' => array('',''),
+              'jquery-ui-tabs' => array('',''),
+              'jquery-ui-widget' => array('',''),  /* jQuery UI 1.8 */
+
+              /* jQuery Effects */
+              'jquery-effects-core' => array('',''),
+              'jquery-effects-blind' => array('',''),
+              'jquery-effects-bounce' => array('',''),
+              'jquery-effects-clip' => array('',''),
+              'jquery-effects-drop' => array('',''),
+              'jquery-effects-explode' => array('',''),
+              'jquery-effects-fade' => array('',''),  /* jQuery UI 1.8 */
+              'jquery-effects-fold' => array('',''),
+              'jquery-effects-highlight' => array('',''),
+              'jquery-effects-pulsate' => array('',''),
+              'jquery-effects-scale' => array('',''),
+              'jquery-effects-shake' => array('',''),
+              'jquery-effects-slide' => array('',''),
+              'jquery-effects-transfer' => array('',''),
+
+              /* prototype */
               'prototype' => array('prototype','prototype'),
+
+              /* scriptaculous */
               'scriptaculous-root' => array('scriptaculous', 'scriptaculous'),
               'scriptaculous-builder' => array('',''),
               'scriptaculous-effects' => array('',''),
@@ -82,11 +120,22 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
               'scriptaculous-controls' => array('',''),
               'scriptaculous-slider' => array('',''),
               'scriptaculous-sound' => array('',''),
+
+              /* moo tools */
               'mootools' => array('mootools','mootools-yui-compressed'),
+
+              /* Dojo */
               'dojo' => array('dojo','dojo.xd'),
+
+              /* swfobject */
               'swfobject' => array('swfobject','swfobject'),
+
+              /* YUI */
               'yui' => array('yui','build/yuiloader/yuiloader-min'),
+
+              /* Ext Core */
               'ext-core' => array('ext-core','ext-core')
+
               );
       $this->noconflict_url = WP_PLUGIN_URL . '/use-google-libraries/js/jQnc.js';
 
@@ -110,7 +159,6 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
     }
 
     static function configure_plugin() {
-
       add_action( 'wp_default_scripts', 
                   array( 'JCP_UseGoogleLibraries',
                          'replace_default_scripts_action'),
@@ -156,8 +204,9 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
      * all loaded locally.
      */
     function setup() {
-      global $concatenate_scripts, $wp_version;
+      global $concatenate_scripts;
       $concatenate_scripts = false;
+      
     }
 
 
@@ -186,6 +235,10 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
           // quick and dirty work around for scriptaculous 1.8.0
           if ($name == 'scriptaculous-root' && $ver == '1.8.0') {
             $ver = '1.8';
+          }
+
+          if ($name == 'jquery-effects-core') {
+            $script->deps[] = 'jquery-ui-core';
           }
 
           // if $lib is empty, then this script does not need to be 
@@ -267,4 +320,6 @@ if (!class_exists('JCP_UseGoogleLibraries')) {
 if (class_exists('JCP_UseGoogleLibraries')){
   JCP_UseGoogleLibraries::configure_plugin();
 }
+
+
 
