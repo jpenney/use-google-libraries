@@ -3,7 +3,7 @@ Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API, YSlow, Page Speed
 Requires at least: 2.9.1
-Tested up to: 3.2
+Tested up to: 3.1
 Stable tag: 1.1.2
 
 Allows your site to use common javascript libraries from Google's AJAX 
@@ -82,7 +82,7 @@ using K2.
 
 = 1.1.2 =
 
-+ Updated jQuery UI to work with WordPress 3.2rc1
++ Updated jQuery UI to work with WordPress 3.1rc1
 
 = 1.1.0.1 =
 
@@ -150,7 +150,7 @@ from  [Peter  Wilson](http://peterwilson.cc/).
 == Upgrade Notice ==
 
 = 1.1.2 =
-Updated for better WordPress 3.2 compatibility.
+Updated for better WordPress 3.1 compatibility.
 
 == A Request ==
 
