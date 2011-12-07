@@ -3,7 +3,7 @@
   Plugin Name: Use Google Libraries
   Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
   Description:Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from Wordpress's own copies.
-  Version: 1.1.2
+  Version: 1.2
   Author: Jason Penney
   Author URI: http://jasonpenney.net/
 */
@@ -70,71 +70,72 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 				// or another plugin will not be registered.  This liste
 				// is just used to chancge where things load from.
 
+				// 'script-handle' => ( 'google-lib-path', 'google-file-name', 'google-combined-into')
 				/* jQuery */
-				'jquery' => array( 'jquery', 'jquery.min' ),
+				'jquery' => array( 'jquery', 'jquery.min', '' ),
 
 				/* jQuery UI */
-				'jquery-ui-core' => array( 'jqueryui', 'jquery-ui.min' ),
-				'jquery-ui-accordion' => array( '', '' ),
-				'jquery-ui-autocomplete' => array( '', '' ), /* jQueri UI 1.8 */
-				'jquery-ui-button' => array( '', '' ), /* jQuery UI 1.8 */
-				'jquery-ui-datepicker' => array( '', '' ),
-				'jquery-ui-dialog' => array( '', '' ),
-				'jquery-ui-draggable' => array( '', '' ),
-				'jquery-ui-droppable' => array( '', '' ),
-				'jquery-ui-menu' => array( '', '' ),
-				'jquery-ui-mouse' => array( '', '' ),  /* jQuery UI 1.8 */
-				'jquery-ui-position' => array( '', '' ),  /* jQuery UI 1.8 */
-				'jquery-ui-progressbar' => array( '', '' ),
-				'jquery-ui-resizable' => array( '', '' ),
-				'jquery-ui-selectable' => array( '', '' ),
-				'jquery-ui-slider' => array( '', '' ),
-				'jquery-ui-sortable' => array( '', '' ),
-				'jquery-ui-tabs' => array( '', '' ),
-				'jquery-ui-widget' => array( '', '' ),  /* jQuery UI 1.8 */
+				'jquery-ui-core' => array( 'jqueryui', 'jquery-ui.min', '' ),
+				'jquery-ui-accordion' => array( '', '', 'jquery-ui-core' ),
+				'jquery-ui-autocomplete' => array( '', '', 'jquery-ui-core' ), /* jQueri UI 1.8 */
+				'jquery-ui-button' => array( '', '', 'jquery-ui-core' ), /* jQuery UI 1.8 */
+				'jquery-ui-datepicker' => array( '', '', 'jquery-ui-core' ),
+				'jquery-ui-dialog' => array( '', '', 'jquery-ui-core' ),
+				'jquery-ui-draggable' => array( '', '', 'jquery-ui-core' ),
+				'jquery-ui-droppable' => array( '', '', 'jquery-ui-core' ),
+				'jquery-ui-menu' => array( '', '', 'jquery-ui-core' ),
+				'jquery-ui-mouse' => array( '', '', 'jquery-ui-core' ),  /* jQuery UI 1.8 */
+				'jquery-ui-position' => array( '', '', 'jquery-ui-core' ),  /* jQuery UI 1.8 */
+				'jquery-ui-progressbar' => array( '', '', 'jquery-ui-core' ),
+				'jquery-ui-resizable' => array( '', '', 'jquery-ui-core' ),
+				'jquery-ui-selectable' => array( '', '', 'jquery-ui-core' ),
+				'jquery-ui-slider' => array( '', '', 'jquery-ui-core' ),
+				'jquery-ui-sortable' => array( '', '', 'jquery-ui-core' ),
+				'jquery-ui-tabs' => array( '', '', 'jquery-ui-core' ),
+				'jquery-ui-widget' => array( '', '', 'jquery-ui-core' ),  /* jQuery UI 1.8 */
 
 				/* jQuery Effects */
-				'jquery-effects-core' => array( '', '' ),
-				'jquery-effects-blind' => array( '', '' ),
-				'jquery-effects-bounce' => array( '', '' ),
-				'jquery-effects-clip' => array( '', '' ),
-				'jquery-effects-drop' => array( '', '' ),
-				'jquery-effects-explode' => array( '', '' ),
-				'jquery-effects-fade' => array( '', '' ),  /* jQuery UI 1.8 */
-				'jquery-effects-fold' => array( '', '' ),
-				'jquery-effects-highlight' => array( '', '' ),
-				'jquery-effects-pulsate' => array( '', '' ),
-				'jquery-effects-scale' => array( '', '' ),
-				'jquery-effects-shake' => array( '', '' ),
-				'jquery-effects-slide' => array( '', '' ),
-				'jquery-effects-transfer' => array( '', '' ),
+				'jquery-effects-core' => array( '', '', 'jquery-ui-core' ),
+				'jquery-effects-blind' => array( '', '', 'jquery-ui-core' ),
+				'jquery-effects-bounce' => array( '', '', 'jquery-ui-core' ),
+				'jquery-effects-clip' => array( '', '', 'jquery-ui-core' ),
+				'jquery-effects-drop' => array( '', '', 'jquery-ui-core' ),
+				'jquery-effects-explode' => array( '', '', 'jquery-ui-core' ),
+				'jquery-effects-fade' => array( '', '', 'jquery-ui-core' ),  /* jQuery UI 1.8 */
+				'jquery-effects-fold' => array( '', '', 'jquery-ui-core' ),
+				'jquery-effects-highlight' => array( '', '', 'jquery-ui-core' ),
+				'jquery-effects-pulsate' => array( '', '', 'jquery-ui-core' ),
+				'jquery-effects-scale' => array( '', '', 'jquery-ui-core' ),
+				'jquery-effects-shake' => array( '', '', 'jquery-ui-core' ),
+				'jquery-effects-slide' => array( '', '', 'jquery-ui-core' ),
+				'jquery-effects-transfer' => array( '', '', 'jquery-ui-core' ),
 
 				/* prototype */
-				'prototype' => array( 'prototype', 'prototype' ),
+				'prototype' => array( 'prototype', 'prototype', '' ),
 
 				/* scriptaculous */
-				'scriptaculous-root' => array( 'scriptaculous', 'scriptaculous' ),
-				'scriptaculous-builder' => array( '', '' ),
-				'scriptaculous-effects' => array( '', '' ),
-				'scriptaculous-dragdrop' => array( '', '' ),
-				'scriptaculous-controls' => array( '', '' ),
-				'scriptaculous-slider' => array( '', '' ),
-				'scriptaculous-sound' => array( '', '' ),
+				'scriptaculous-root' => array( 'scriptaculous', 'scriptaculous', '' ),
+				'scriptaculous-builder' => array( '', '', 'scriptaculous-root' ),
+				'scriptaculous-effects' => array( '', '', 'scriptaculous-root' ),
+				'scriptaculous-dragdrop' => array( '', '', 'scriptaculous-root' ),
+				'scriptaculous-controls' => array( '', '', 'scriptaculous-root' ),
+				'scriptaculous-slider' => array( '', '', 'scriptaculous-root' ),
+				'scriptaculous-sound' => array( '', '', 'scriptaculous-root' ),
 
 				/* moo tools */
-				'mootools' => array( 'mootools', 'mootools-yui-compressed' ),
+				'mootools' => array( 'mootools', 'mootools-yui-compressed', '' ),
 
 				/* Dojo */
-				'dojo' => array( 'dojo', 'dojo.xd' ),
+				'dojo' => array( 'dojo', 'dojo.xd', '' ),
 
 				/* swfobject */
-				'swfobject' => array( 'swfobject', 'swfobject' ),
+				'swfobject' => array( 'swfobject', 'swfobject', '' ),
 
 				/* YUI */
-				'yui' => array( 'yui', 'build/yuiloader/yuiloader-min' ),
+				'yui' => array( 'yui', 'build/yuiloader/yuiloader-min', '' ),
 
 				/* Ext Core */
-				'ext-core' => array( 'ext-core', 'ext-core' )
+				'ext-core' => array( 'ext-core', 'ext-core', '' )
 
 			);
 			$this->noconflict_url = WP_PLUGIN_URL . '/use-google-libraries/js/jQnc.js';
@@ -177,14 +178,8 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 				if ( WP_DEBUG !== false ) {
 					error_log( self::$script_before_init_notice );
 				}
-				/*
-        if ( is_admin() ) {
-          add_action('admin_notices',
-                     array("JCP_UseGoogleLibraries",
-                           'script_before_init_admin_notice'));
-        }
-        */
-				$ugl =  self::get_instance();
+
+				$ugl = self::get_instance();
 				$ugl->replace_default_scripts( $wp_scripts );
 			}
 		}
@@ -195,7 +190,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		}
 
 		static function setup_filter() {
-			$ugl =  self::get_instance();
+			$ugl = self::get_instance();
 			$ugl->setup();
 		}
 
@@ -227,6 +222,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 				if ( $script = $scripts->query( $name ) ) {
 					$lib = $values[0];
 					$js = $values[1];
+					$combined = $values[2];
 
 					// default to requested ver
 					$ver = $script->ver;
@@ -237,8 +233,10 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 						$ver = '1.8';
 					}
 
-					if ( $name == 'jquery-effects-core' ) {
-						$script->deps[] = 'jquery-ui-core';
+					if ( ( $combined !== '' ) && ( ! in_array( $combined, $script->deps ) ) ) {
+						// if this script has been combined into another script
+						// ensure this handle depends on the combined handle
+						$script->deps[] = $combined;
 					}
 
 					// if $lib is empty, then this script does not need to be
