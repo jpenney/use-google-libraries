@@ -3,7 +3,7 @@
   Plugin Name: Use Google Libraries
   Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
   Description:Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from Wordpress's own copies.
-  Version: 1.2
+  Version: 1.2.1
   Author: Jason Penney
   Author URI: http://jasonpenney.net/
 */
@@ -54,7 +54,6 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		protected $is_ssl;
 		protected static $script_before_init_notice =
 			'<strong>Use Google Libraries</strong>: Another plugin has registered or enqued a script before the "init" action.  Attempting to work around it.';
-
 		/**
 		 * PHP 4 Compatible Constructor
 		 */
@@ -151,7 +150,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 						( getenv( 'SERVER_PORT' ) == '433' ) ) )
 				or
 				( isset( $_SERVER ) and
-					( ( isset( $_SERVER['HTTPS'] ) and $_SERVER['https'] !='' and $_SERVER['HTTPS'] != 'off' )
+					( ( isset( $_SERVER['HTTPS'] ) and $_SERVER['HTTPS'] !='' and $_SERVER['HTTPS'] != 'off' )
 						or
 						( isset( $_SERVER['SERVER_PORT'] ) and $_SERVER['SERVER_PORT'] == '443' ) ) ) ) {
 				$is_ssl = true;
@@ -226,6 +225,13 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 					// default to requested ver
 					$ver = $script->ver;
+					
+					if ( strpos( $ver, '-' ) !== false ) {
+						if ( WP_DEBUG !== false ) {
+							error_log("WordPress appears to be using a non-standard version of $name (version $ver). Use Google Libraries not enabled for $name.");
+						}
+						continue;
+					}
 
 					// TODO: replace with more flexible option
 					// quick and dirty work around for scriptaculous 1.8.0

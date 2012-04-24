@@ -3,8 +3,8 @@ Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API, YSlow, Page Speed
 Requires at least: 2.9.1
-Tested up to: 3.3
-Stable tag: 1.2
+Tested up to: 3.3.2
+Stable tag: 1.2.1
 
 Allows your site to use common javascript libraries from Google's AJAX 
 Libraries CDN, rather than from WordPress's own copies.
@@ -69,6 +69,12 @@ enabled, a message will be logged letting you know this is happening.
 Please see the section on **Incompatible Plugins** and
 **Incompatible Themes** for specific information. 
 
+= How do I use the libraries supplied by Use Google Libraries? =
+
+The same way you use them when Use Google Libraries isn't installed using 
+'wp_enqueue_script'.  In fact you should develop your theme or plugin without
+Use Google Libraries being enabled at all, then test it both ways.
+
 == Incompatible Plugins ==
 
 
@@ -80,6 +86,12 @@ I've had scattered reports that UGL is stepping out of the way when
 using K2.
 
 == Changelog ==
+
+= 1.2.1 = 
+
++ Added check for WordPress including non-standard versions of scripts (fixes
+WordPress 3.2.2/swfobject).
++ Fixed incorrect case in HTTPS check.
 
 = 1.2 = 
 
@@ -157,8 +169,8 @@ from  [Peter  Wilson](http://peterwilson.cc/).
 
 == Upgrade Notice ==
 
-= 1.2 =
-Dependency support improved. Needed for WordPress 3.3.
+= 1.2.1 =
+Required for WordPress 3.3.2
 
 == A Request ==
 
