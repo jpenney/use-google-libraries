@@ -3,8 +3,8 @@ Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API, YSlow, Page Speed
 Requires at least: 2.9.1
-Tested up to: 3.3.2
-Stable tag: 1.2.1
+Tested up to: 3.4
+Stable tag: 1.5
 
 Allows your site to use common javascript libraries from Google's AJAX 
 Libraries CDN, rather than from WordPress's own copies.
@@ -75,6 +75,21 @@ The same way you use them when Use Google Libraries isn't installed using
 'wp_enqueue_script'.  In fact you should develop your theme or plugin without
 Use Google Libraries being enabled at all, then test it both ways.
 
+= Why do some scripts continue to use the WordPress supplied versions? =
+
+Assuming some other plugin or theme isn't the cause, Use Google Libries does 
+it's very best to ensure your site behaves as it should when using the stock 
+WordPress scripts.  If WordPress is asking for a version of a script that 
+Google isn't hosting, then it will continue to use the WordPress supplied 
+version.
+
+= Can I always load the latest version of a hosted script? =
+
+No. Use Google Libraries doesn't do that because it would almost certainly 
+break WordPress. Even if it didn't, the less 'version specific' URLs supported 
+by Google's CDN set a short term 'Expires' header, so there wouldn't be much
+point.
+
 == Incompatible Plugins ==
 
 
@@ -86,6 +101,14 @@ I've had scattered reports that UGL is stepping out of the way when
 using K2.
 
 == Changelog ==
+
+= 1.5 = 
+
++ using `wp_remote_head` to query that the replacement URL is actually
+hosted by google.  If it's not, then the WordPress supplied version will be 
+used.
++ Using the Transient API to store the replacement URLS, rather than 
+recalculating and re-querying them every load.
 
 = 1.2.1 = 
 
@@ -169,8 +192,8 @@ from  [Peter  Wilson](http://peterwilson.cc/).
 
 == Upgrade Notice ==
 
-= 1.2.1 =
-Required for WordPress 3.3.2
+= 1.5 =
+Detects when Google isn't hosting requested version.  Required for WordPress 3.4!
 
 == A Request ==
 

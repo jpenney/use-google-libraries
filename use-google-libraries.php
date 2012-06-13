@@ -2,8 +2,8 @@
 /*
   Plugin Name: Use Google Libraries
   Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
-  Description:Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from Wordpress's own copies.
-  Version: 1.2.1
+  Description: Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from WordPress's own copies.
+  Version: 1.5
   Author: Jason Penney
   Author URI: http://jasonpenney.net/
 */
@@ -40,7 +40,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 	class JCP_UseGoogleLibraries {
 
 		private static $instance;
-
+		private static $version = '1.5';
 		public static function get_instance() {
 			if ( !isset( self::$instance ) ) {
 				self::$instance =  new JCP_UseGoogleLibraries();
@@ -52,8 +52,10 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		protected $noconflict_url;
 		protected $noconflict_next;
 		protected $is_ssl;
+		protected static $cache_id = 'JCP_UseGoogleLibraries_cache';
+		protected static $cache_len = 90000; // 25 hours
 		protected static $script_before_init_notice =
-			'<strong>Use Google Libraries</strong>: Another plugin has registered or enqued a script before the "init" action.  Attempting to work around it.';
+			'Another plugin has registered or enqued a script before the "init" action.  Attempting to work around it.';
 		/**
 		 * PHP 4 Compatible Constructor
 		 */
@@ -174,10 +176,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			// that.
 			global $wp_scripts;
 			if ( is_a( $wp_scripts, 'WP_Scripts' ) ) {
-				if ( WP_DEBUG !== false ) {
-					error_log( self::$script_before_init_notice );
-				}
-
+				self::debug( self::$script_before_init_notice );
 				$ugl = self::get_instance();
 				$ugl->replace_default_scripts( $wp_scripts );
 			}
@@ -185,12 +184,28 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 
 		static function script_before_init_admin_notice() {
-			echo '<div class="error fade"><p>' . self::$script_before_init_notice . '</p></div>';
+			echo '<div class="error fade"><p>Use Google Libraries: ' . self::$script_before_init_notice . '</p></div>';
 		}
 
 		static function setup_filter() {
 			$ugl = self::get_instance();
 			$ugl->setup();
+		}
+
+		/**
+		 * Log message if `WP_DEBUG` enabled.
+		 *
+		 * @since 1.5
+		 *
+		 * @param mixed   $message string to log, or object to log via `print_r`
+		 */
+		static function debug( $message ) {
+			if ( WP_DEBUG !== false ) {
+				if ( is_array( $message ) || is_object( $message ) ) {
+					$message = print_r( $message, true );
+				}
+				error_log( "Use Google Libraries: " . $message );
+			}
 		}
 
 		/**
@@ -210,13 +225,22 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		}
 
 		/**
-		 * Replace as many of the wordpress default script registrations as possible
-		 * with ones from google
+		 * Collects replacement script registration data.
 		 *
-		 * @param object  $scripts WP_Scripts object.
+		 * Processes standard WordPress script registrations against list of
+		 * scripts hosted on Google's CDN.  Will exclude any scripts that
+		 * contain '-' in the version number (used by WordPress devs to signify
+		 * a non-standard version). Also, the new url will be queried to ensure
+		 * it's valid (via `wp_remote_head`).
+		 *
+		 * @since 1.5
+		 *
+		 * @param object  $scripts WP_Scripts object
+		 * @return array updated script registration data
 		 */
-		function replace_default_scripts( &$scripts ) {
+		function build_newscripts( &$scripts ) {
 			$newscripts = array();
+			$combine_ok = array();
 			foreach ( $this->google_scripts as $name => $values ) {
 				if ( $script = $scripts->query( $name ) ) {
 					$lib = $values[0];
@@ -225,11 +249,9 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 					// default to requested ver
 					$ver = $script->ver;
-					
+
 					if ( strpos( $ver, '-' ) !== false ) {
-						if ( WP_DEBUG !== false ) {
-							error_log("WordPress appears to be using a non-standard version of $name (version $ver). Use Google Libraries not enabled for $name.");
-						}
+						self::debug( "WordPress appears to be requesting a non-standard version of $name (version $ver). Using version provided by WordPress to ensure compatability." );
 						continue;
 					}
 
@@ -239,10 +261,16 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 						$ver = '1.8';
 					}
 
-					if ( ( $combined !== '' ) && ( ! in_array( $combined, $script->deps ) ) ) {
-						// if this script has been combined into another script
-						// ensure this handle depends on the combined handle
-						$script->deps[] = $combined;
+					if ( $combined !== '' ) {
+						if ( ! in_array( $combined, $combine_ok ) ) {
+							self::debug( "Google servers not hosting combined library for $name (version $ver). Using version provided by WordPress to ensure compatability." );
+							continue;
+						}
+						if ( ! in_array( $combined, $script->deps ) ) {
+							// if this script has been combined into another script
+							// ensure this handle depends on the combined handle
+							$script->deps[] = $combined;
+						}
 					}
 
 					// if $lib is empty, then this script does not need to be
@@ -250,19 +278,74 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 					// it around for dependencies
 					if ( $lib != '' ) {
 						// build new URL
-						$script->src = "http://ajax.googleapis.com/ajax/libs/$lib/$ver/$js.js";
-
-						if ( $this->is_ssl ) {
-							//use ssl
-							$script->src = preg_replace( '/^http:/', 'https:', $script->src );
+						$url = "http://ajax.googleapis.com/ajax/libs/$lib/$ver/$js.js";
+						if ( wp_remote_retrieve_response_code( wp_remote_head( $url ) ) !== 200 ) {
+							self::debug( "Google servers do not seem to be hosting requested version of $name (version $ver). Using version provided by WordPress." );
+							continue;
 						}
+						$script->src = $url;
 					} else {
 						$script->src = "";
 					}
 					$newscripts[] = $script;
+					$combine_ok[] = $name;
 				}
 			}
+			return $newscripts;
 
+		}
+
+
+		/**
+		 * Get new script registration data.
+		 *
+		 * Attempts to load script registration data from the transient cache.
+		 * If not in cache, or if cached data is from a different version of
+		 * either WordPress or this plug-in, then it will be rebuilt.  Also
+		 * handles forcing URLS to use SSL if site is currently loaded over
+		 * SSL.
+		 *
+		 * @since 1.5
+		 *
+		 * @param object  $scripts WP_Scripts object
+		 * @return array updated script registration data
+		 */
+		function get_newscripts( &$scripts ) {
+			$wp_ver = get_bloginfo( 'version' );
+			if ( false === ( $cache = get_transient( self::$cache_id ) ) ) {
+				$cache = array();
+			}
+			if ( ( ! isset( $cache['ugl_ver'] ) ) || ( $cache['ugl_ver'] !== self::$version ) ||
+				( ! isset( $cache['wp_ver'] ) ) || ( $cache['wp_ver'] !== $wp_ver ) ||
+				( ! isset( $cache['newscripts'] ) ) ) {
+				$newscripts = $this->build_newscripts( $scripts );
+				$cache = array(
+					'ugl_ver' => self::$version,
+					'wp_ver' => $wp_ver,
+					'newscripts' => $newscripts,
+				);
+				set_transient( self::$cache_id, $cache, self::$cache_len );
+			} else {
+				$newscripts = $cache['newscripts'];
+			}
+			// need to handle ssl after cache load, because it may swap
+			// back and forth depending on the site config/usage
+			if ( $this->is_ssl === true ) {
+				foreach ( $newscripts as $script ) {
+					$script->src = preg_replace( '/^http:/', 'https:', $script->src );
+				}
+			}
+			return $newscripts;
+		}
+
+		/**
+		 * Replace as many of the wordpress default script registrations as
+		 * possible with ones from google
+		 *
+		 * @param object  $scripts WP_Scripts object.
+		 */
+		function replace_default_scripts( &$scripts ) {
+			$newscripts = $this->get_newscripts( $scripts );
 			foreach ( $newscripts as $script ) {
 				$olddata = $this->WP_Dependency_get_data( $scripts, $script->handle );
 				$scripts->remove( $script->handle );
@@ -273,7 +356,6 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 						$scripts->add_data( $script->handle, $data_name, $data );
 					}
 			}
-
 		}
 
 
