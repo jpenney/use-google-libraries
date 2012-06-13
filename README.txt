@@ -3,8 +3,8 @@ Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API, YSlow, Page Speed
 Requires at least: 2.9.1
-Tested up to: 3.4rc1
-Stable tag: 1.2.1
+Tested up to: 3.4
+Stable tag: 1.5
 
 Allows your site to use common javascript libraries from Google's AJAX 
 Libraries CDN, rather than from WordPress's own copies.
@@ -192,8 +192,8 @@ from  [Peter  Wilson](http://peterwilson.cc/).
 
 == Upgrade Notice ==
 
-= 1.2.1 =
-Required for WordPress 3.3.2
+= 1.5 =
+Detects when Google isn't hosting requested version.  Required for WordPress 3.4!
 
 == A Request ==
 
