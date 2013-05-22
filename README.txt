@@ -3,8 +3,8 @@ Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API, YSlow, Page Speed
 Requires at least: 2.9.1
-Tested up to: 3.4
-Stable tag: 1.5
+Tested up to: 3.6b3
+Stable tag: 1.5.2
 
 Allows your site to use common javascript libraries from Google's AJAX 
 Libraries CDN, rather than from WordPress's own copies.
@@ -102,6 +102,18 @@ using K2.
 
 == Changelog ==
 
+= 1.5.2 =
+
++ using protocol-relative URLS with WordPress >= 3.5
++ use WordPress provided `is_ssl` rather than custom check (only for
+WordPress < 3.5)
++ Detect if 'jquery' is a meta-script registration, and actual jQuery
+is loaded as 'jquery-core' tag (WordPress 3.6 Beta).
+
+= 1.5.1 =
+
++ fix bug in `is_ssl` check.
+
 = 1.5 = 
 
 + using `wp_remote_head` to query that the replacement URL is actually
@@ -192,8 +204,8 @@ from  [Peter  Wilson](http://peterwilson.cc/).
 
 == Upgrade Notice ==
 
-= 1.5 =
-Detects when Google isn't hosting requested version.  Required for WordPress 3.4!
+= 1.5.2 =
+Better SSL support.  Required for WordPress 3.6!
 
 == A Request ==
 
