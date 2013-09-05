@@ -3,7 +3,7 @@
   Plugin Name: Use Google Libraries
   Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
   Description: Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from WordPress's own copies.
-  Version: 1.5.2
+  Version: 1.6dev
   Author: Jason Penney
   Author URI: http://jasonpenney.net/
 */
