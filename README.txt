@@ -2,8 +2,8 @@
 Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API, YSlow, Page Speed
-Requires at least: 2.9.1
-Tested up to: 3.6b3
+Requires at least: 3.4
+Tested up to: 3.6
 Stable tag: 1.5.2
 
 Allows your site to use common javascript libraries from Google's AJAX 
@@ -92,6 +92,23 @@ point.
 
 == Incompatible Plugins ==
 
+= Better WordPress Minify =
+
+Better WordPress Minify version 1.2.2 does not yet support
+protocol-relative URLs, but [the next release is supposed to correct
+this](http://wordpress.org/support/topic/conflict-with-use-google-libraries-152).
+
+= Gravity Forms = 
+
+I've had reports of Gravity Forms breaking UGL, but I don't have
+access to Gravity Forms, so I'm not sure what's going on.  If you need
+Gravity Forms you might need to disable UGL, or it might be fine, I'm
+not really sure.
+
+= WP-Minify =
+
+WP-Minify doesn't yet support protocol-relative URLs.  Add
+'//ajax.googleapis.com/' as a JS and CSS exclusion.
 
 == Incompatible Themes ==
 
@@ -101,6 +118,10 @@ I've had scattered reports that UGL is stepping out of the way when
 using K2.
 
 == Changelog ==
+
+= 1.6 =
+
++ Drop support for PHP4, and WordPress < 3.4
 
 = 1.5.2 =
 
