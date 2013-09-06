@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bootstrap the testing environment
  * Uses wordpress tests (http://github.com/nb/wordpress-tests/) which uses PHPUnit
@@ -15,4 +16,11 @@ $GLOBALS['wp_tests_options'] = array(
 	'active_plugins' => array( 'use-google-libraries/use-google-libraries.php' ),
 );
 
-require dirname( __FILE__ ) . '/lib/bootstrap.php';
+$wp_test_dir = getenv( 'WP_TEST_DIR' );
+if ( !$wp_test_dir ) {
+	$wp_test_dir = dirname( __FILE__ );
+}
+
+require_once $wp_test_dir . '/includes/functions.php';
+require $wp_test_dir . '/includes/bootstrap.php';
+require_once dirname( __FILE__ ) . '/testcase.php';
