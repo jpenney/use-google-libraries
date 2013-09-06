@@ -16,11 +16,13 @@ $GLOBALS['wp_tests_options'] = array(
 	'active_plugins' => array( 'use-google-libraries/use-google-libraries.php' ),
 );
 
-$wp_test_dir = getenv( 'WP_TEST_DIR' );
-if ( !$wp_test_dir ) {
-	$wp_test_dir = dirname( __FILE__ );
+$wp_test_inc = getenv( 'WP_TESTS_DIR' );
+if ( ! $wp_test_inc ) {
+	$wp_test_inc = dirname( __FILE__ ) . '/lib';
+} else {
+	$wp_test_inc = $wp_test_inc . '/includes';
 }
 
-require_once $wp_test_dir . '/includes/functions.php';
-require $wp_test_dir . '/includes/bootstrap.php';
+require_once $wp_test_inc . '/functions.php';
+require $wp_test_inc . '/bootstrap.php';
 require_once dirname( __FILE__ ) . '/testcase.php';
