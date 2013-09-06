@@ -21,18 +21,18 @@ class UGL_ScriptTests extends UGL_ScriptTestCase {
 	}
 	
 	function test_scripts_replaced() {
-		foreach ( array_keys( $this->ugl->get_google_scripts() ) as $handle) {
-			if ( $script = $this->scripts->query( $handle ) ) {
-				if ( $script->src && strpos( $script->ver, '-' ) === false) {
-					$this->assertContains('//ajax.googleapis.com/ajax/libs', 
-							$script->src, $handle + ' should be loading from google');
-				}
+		$scripts = $this->ugl->get_google_scripts();
+		foreach ( array_keys( $scripts ) as $handle) {
+			if ( $script->src && strpos( $script->ver, '-' ) === false) {
+				$this->assertContains('//ajax.googleapis.com/ajax/libs', 
+						$script->src, $handle + ' should be loading from google');
 			}
-		} 
+		}
 	}
 	
 	function test_nonstandard_ver_not_replaced() {
-		foreach ( array_keys( $this->ugl->get_google_scripts() ) as $handle) {
+		$scripts = $this->ugl->get_google_scripts();
+		foreach ( array_keys( $scripts ) as $handle) {
 			if ( $script = $this->scripts->query( $handle ) ) {
 				if ( $script->src && strpos( $script->ver, '-' ) !== false) {
 					$this->assertNotContains('//ajax.googleapis.com/ajax/libs',
@@ -41,5 +41,4 @@ class UGL_ScriptTests extends UGL_ScriptTestCase {
 			}
 		}
 	}
-	
 }

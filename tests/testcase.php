@@ -37,7 +37,8 @@ class UGL_ScriptTestCase extends UGL_UnitTestCase {
 	
 	function setUp() {
 		parent::setUp();
-		$this->scripts = new WP_Scripts;
-		wp_default_scripts( $this->scripts );
+		$scripts = new WP_Scripts();
+		wp_default_scripts( $scripts );
+		$this->scripts = $scripts;
 	}
 }
