@@ -24,12 +24,13 @@ class WP_Test_WordPress_Plugin_Tests extends WP_UnitTestCase {
 			$this->markTestSkipped( 'Not running on Travis CI' );
 		}
 
-		if ( $requested_version == 'lastest' ) {
-			$this->markTestSkipped( "Can't verify version on 'latest'" );
-		}
 		//grab the requested version
 		$requested_version = getenv( 'WP_VERSION' );
 
+		if ( $requested_version == 'lastest' ) {
+			$this->markTestSkipped( "Can't verify version on 'latest'" );
+		}
+		
 		//trunk is always "master" in github terms, but WordPress has a specific way of describing it
 		//grab the exact version number to verify that we're on trunk
 		if ( $requested_version == 'master' ) {
