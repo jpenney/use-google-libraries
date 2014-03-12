@@ -3,7 +3,7 @@
 if ( class_exists( 'JCP_UseGoogleLibraries' ) ) {
 	class JCP_UseGoogleLibraries_Test extends JCP_UseGoogleLibraries {
 		public static function get_instance() {
-			if ( !isset( self::$instance ) || ! is_a(self::$instance, 'JCP_UseGoogleLibraries_Test') ) {
+			if ( !isset( self::$instance ) || ! is_a( self::$instance, 'JCP_UseGoogleLibraries_Test' ) ) {
 				self::$instance =  new JCP_UseGoogleLibraries_Test();
 			}
 			return self::$instance;
@@ -16,6 +16,14 @@ if ( class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		public function get_google_scripts() {
 			return $this->google_scripts;
 		}
+
+		public function get_version() {
+			return self::$version;
+		}
+
+		public function get_plugin_file() {
+			return self::$plugin_file;
+		}
 	}
 }
 
@@ -27,14 +35,14 @@ class UGL_UnitTestCase extends WP_UnitTestCase {
 		if ( class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			$this->ugl = JCP_UseGoogleLibraries_Test::get_instance();
 		} else {
-			$this->markTestSkipped('Use Google Libraries not loaded');
+			$this->markTestSkipped( 'Use Google Libraries not loaded' );
 		}
 	}
-	
+
 }
 
 class UGL_ScriptTestCase extends UGL_UnitTestCase {
-	
+
 	function setUp() {
 		parent::setUp();
 		$scripts = new WP_Scripts();
