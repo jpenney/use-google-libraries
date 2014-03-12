@@ -27,7 +27,7 @@ class WP_Test_WordPress_Plugin_Tests extends WP_UnitTestCase {
 		//grab the requested version
 		$requested_version = getenv( 'WP_VERSION' );
 
-		if ( $requested_version == 'lastest' ) {
+		if ( $requested_version == 'latest' ) {
 			$this->markTestSkipped( "Can't verify version on 'latest'" );
 		}
 		
