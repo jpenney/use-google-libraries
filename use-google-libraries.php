@@ -6,6 +6,8 @@
   Version: 1.6dev
   Author: Jason Penney
   Author URI: http://jasonpenney.net/
+  Text Domain: use-google-libraries
+  Domain Path: /languages
 */
 
 /*  Copyright 2008-2013  Jason Penney (email : jpenney@jczorkmid.net )
@@ -30,43 +32,45 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 	class JCP_UseGoogleLibraries {
 
-		private static $instance;
-		private static $version = '1.5.2';
+		protected static $instance;
+		protected static $plugin_file = __FILE__;
+		protected static $version = '1.6dev';
+
 		public static function get_instance() {
 			if ( !isset( self::$instance ) ) {
-				self::$instance =  new JCP_UseGoogleLibraries();
+				self::$instance = new JCP_UseGoogleLibraries();
 			}
 			return self::$instance;
 		}
-		
+
 		/**
 		 * Registry of script replacement rules
-		 * 
+		 *
 		 * Entries are formatted as follows:
 		 * <code>
-		 *     'script-handle' => array( 
-		 *         'google-lib-path', 
-		 *         'google-file-name', 
+		 *     'script-handle' => array(
+		 *         'google-lib-path',
+		 *         'google-file-name',
 		 *         'google-combined-into')
 		 * </code>
 		 *
-		 * - 'script-handle' -- the handle used by WordPress script 
+		 * - 'script-handle' -- the handle used by WordPress script
 		 *   registration
 		 * - 'google-lib-path' -- path to location on Google CDN( empty
 		 *   string if script has been combined).
 		 * - 'google-file-name' -- file name (minus .js) on Google CDN (empty
 		 *   string if script has been combined).
-		 * - 'google-combined-into' -- If not empty string, then the given 
+		 * - 'google-combined-into' -- If not empty string, then the given
 		 *   handle has been combined into a file loaded by this handle.
-		 *   
+		 *
 		 * @var array
 		 */
 		protected $google_scripts;
-		
+
 		/**
 		 * Used internally to ensure jQuery.noconflict is executed as close to
 		 * how core WordPress would.
-		 * 
+		 *
 		 * @var bool
 		 */
 		protected $noconflict_next;
@@ -79,43 +83,38 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		 * @since 5.2
 		 */
 		protected $jquery_tag;
-		
+
 		/**
-		 * True if using a version of WordPress that allows 
+		 * True if using a version of WordPress that allows
 		 * `wp_register_script` to take protocol-relative URLs, otherwise False
-		 * 
+		 *
 		 * @since 1.5.2
-		 * 
+		 *
 		 * @var bool
 		 */
 		protected $protocol_relative_supported;
-		
+
 		/**
 		 * transient name used when caching
-		 * 
+		 *
 		 * @var string
 		 */
 		protected static $cache_id = 'JCP_UseGoogleLibraries_cache';
-		
+
 		/**
 		 * transient expiration
-		 * 
+		 *
 		 * @var int
 		 */
 		protected static $cache_len = 90000; // 25 hours
-		
+
 		/**
 		 * Message displayed and logged when a WP_Scripts has been created before it's time
-		 * 
+		 *
 		 * @var unknown_type
 		 */
 		protected static $script_before_init_notice =
 			'Another plugin has registered or enqued a script before the "init" action.  Attempting to work around it.';
-		
-		/**
-		 * PHP 4 Compatible Constructor
-		 */
-		function JCP_UseGoogleLibraries() {$this->__construct();}
 
 		/**
 		 * PHP 5 Constructor
@@ -197,7 +196,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 			);
 			$this->noconflict_next = FALSE;
-			// protocol-relative URLS accepted by `wp_register_scripts` 
+			// protocol-relative URLS accepted by `wp_register_scripts`
 			// starting with version 3.5
 			$this->protocol_relative_supported = version_compare( get_bloginfo( 'version' ), '3.5', '>=' );
 		}
@@ -225,8 +224,9 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		}
 
 		/**
-		 * Get markup to show error message in admin when $WP_Script created befor it's time 
-		 * @returns string markup for notice display 
+		 * Get markup to show error message in admin when $WP_Script created befor it's time
+		 *
+		 * @returns string markup for notice display
 		 */
 		static function script_before_init_admin_notice() {
 			echo '<div class="error fade"><p>Use Google Libraries: ' . self::$script_before_init_notice . '</p></div>';
@@ -263,7 +263,6 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 		}
 
-
 		static function replace_default_scripts_action( &$scripts ) {
 			$ugl = self::get_instance();
 			$ugl->replace_default_scripts( $scripts );
@@ -286,15 +285,15 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		function build_newscripts( &$scripts ) {
 			$newscripts = array();
 			$combine_ok = array();
-			
+
 			// jquery may really be loaded under jquery-core
 			// if so, we'll adjust google_scripts here
 			if ( $scripts->query( 'jquery-core' ) && array_key_exists( 'jquery', $this->google_scripts ) ) {
 				$this->google_scripts['jquery-core'] = $this->google_scripts['jquery'];
-				unset($this->google_scripts['jquery']);
+				unset( $this->google_scripts['jquery'] );
 				$this->jquery_tag = 'jquery-core';
 			}
-			
+
 			foreach ( $this->google_scripts as $name => $values ) {
 				if ( $script = $scripts->query( $name ) ) {
 					$lib = $values[0];
@@ -332,7 +331,8 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 					if ( $lib != '' ) {
 						// build new URL
 						$url = "//ajax.googleapis.com/ajax/libs/$lib/$ver/$js.js";
-						if ( wp_remote_retrieve_response_code( wp_remote_head( "http:$url" ) ) !== 200 ) {
+						$head = wp_remote_head( "http:$url" );
+						if ( wp_remote_retrieve_response_code( $head ) !== 200 ) {
 							self::debug( "Google servers do not seem to be hosting requested version of $name (version $ver). Using version provided by WordPress." );
 							continue;
 						}
@@ -429,7 +429,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 			if ( !method_exists( $dep_obj, 'get_data' ) )
 				return $dep_obj->registered[$handle]->extra[$data_name];
-			
+
 			return $dep_obj->get_data( $handle, $data_name );
 		}
 
