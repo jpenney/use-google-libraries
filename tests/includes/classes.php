@@ -24,6 +24,30 @@ if ( class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		public function get_plugin_file() {
 			return self::$plugin_file;
 		}
+
+		public function get_jquery_tag() {
+			return $this->jquery_tag;
+		}
+
+		public function newscripts_fix_jquery_core( &$scripts ) {
+			parent::newscripts_fix_jquery_core( $scripts );
+		}
+
+		public function newscripts_build_url( $lib, $ver, $js, $orig_url ) {
+			return parent::newscripts_build_url( $lib, $ver, $js, $orig_url );
+		}
+
+		public function get_noconflict_next( ) {
+			return $this->noconflict_next;
+		}
+
+		public function get_noconflict_inject() {
+			return self::$noconflict_inject;
+		}
+
+		public function set_noconflict_next( $value ) {
+			$this->noconfilct_next = $value;
+		}
 	}
 }
 

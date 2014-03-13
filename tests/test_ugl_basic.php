@@ -43,4 +43,5 @@ class UGL_BasicTests extends UGL_UnitTestCase {
 		global $concatenate_scripts;
 		$this->assertFalse( $concatenate_scripts );
 	}
+
 }
