@@ -310,7 +310,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			}
 		}
 
-		protected function newscripts_build_url( $lib, $ver, $js, $orig_url ) {
+		protected function newscripts_build_url( $name, $lib, $ver, $js, $orig_url ) {
 
 			// if $lib is empty, then this script does not need to be
 			// exlicitly loaded when using googleapis.com, but we need to keep
@@ -384,7 +384,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 					}
 
 					$script->src = $this->newscripts_build_url(
-						$lib, $ver, $js, $script->src );
+						$name, $lib, $ver, $js, $script->src );
 
 					$newscripts[] = $script;
 					$combine_ok[] = $name;
