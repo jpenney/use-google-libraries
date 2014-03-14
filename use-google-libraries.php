@@ -28,7 +28,7 @@
 
 */
 
-if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
+if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 	class JCP_UseGoogleLibraries {
 
@@ -38,7 +38,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		protected static $noconflict_inject = "<script type='text/javascript'>try{jQuery.noConflict();}catch(e){};</script>\n";
 
 		public static function get_instance() {
-			if ( !isset( self::$instance ) ) {
+			if ( ! isset( self::$instance ) ) {
 				self::$instance = new JCP_UseGoogleLibraries();
 			}
 			return self::$instance;
@@ -209,26 +209,35 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		 * PHP 5 Constructor
 		 */
 		function __construct() {
-			$this->jquery_tag = 'jquery';
+			$this->jquery_tag     = 'jquery';
 			$this->google_scripts = self::$default_google_scripts;
 
 			$this->noconflict_next = FALSE;
 			// protocol-relative URLS accepted by `wp_register_scripts`
 			// starting with version 3.5
 			$this->protocol_relative_supported = version_compare(
-				get_bloginfo( 'version' ), '3.5', '>=' );
+				get_bloginfo( 'version' ), '3.5', '>='
+			);
 		}
 
 		static function configure_plugin() {
-			add_action( 'wp_default_scripts',
-				array( 'JCP_UseGoogleLibraries',
-					'replace_default_scripts_action' ),
-				1000 );
-			add_filter( 'script_loader_src',
-				array( "JCP_UseGoogleLibraries", "remove_ver_query_filter" ),
-				1000 );
-			add_filter( 'init',
-				array( "JCP_UseGoogleLibraries", "setup_filter" ) );
+			add_action(
+				'wp_default_scripts',
+				array(
+					'JCP_UseGoogleLibraries',
+					'replace_default_scripts_action',
+				),
+				1000
+			);
+			add_filter(
+				'script_loader_src',
+				array( 'JCP_UseGoogleLibraries', 'remove_ver_query_filter' ),
+				1000
+			);
+			add_filter(
+				'init',
+				array( 'JCP_UseGoogleLibraries', 'setup_filter' )
+			);
 
 			// There's a chance some plugin has called wp_enqueue_script
 			// outside of any hooks, which means that this plugin's
@@ -270,7 +279,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 				if ( is_array( $message ) || is_object( $message ) ) {
 					$message = print_r( $message, true );
 				}
-				error_log( "Use Google Libraries: " . $message );
+				error_log( 'Use Google Libraries: ' . $message );
 			}
 		}
 
@@ -317,7 +326,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			// it around for dependencies
 			if ( $lib != '' ) {
 				// build new URL
-				$url = "//ajax.googleapis.com/ajax/libs/$lib/$ver/$js.js";
+				$url  = "//ajax.googleapis.com/ajax/libs/$lib/$ver/$js.js";
 				$head = wp_remote_head( "http:$url" );
 				if ( wp_remote_retrieve_response_code( $head ) !== 200 ) {
 					self::debug( "Google servers do not seem to be hosting requested version of $name (version $ver). Using version provided by WordPress." );
@@ -328,7 +337,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 				}
 				return $url;
 			} else {
-				return "";
+				return '';
 			}
 		}
 
@@ -384,7 +393,8 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 					}
 
 					$script->src = $this->newscripts_build_url(
-						$name, $lib, $ver, $js, $script->src );
+						$name, $lib, $ver, $js, $script->src
+					);
 
 					$newscripts[] = $script;
 					$combine_ok[] = $name;
@@ -461,13 +471,13 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 		function WP_Dependency_get_data( $dep_obj, $handle, $data_name = false ) {
 
-			if ( !method_exists( $dep_obj, 'add_data' ) )
+			if ( ! method_exists( $dep_obj, 'add_data' ) )
 				return false;
 
-			if ( !isset( $dep_obj->registered[$handle] ) )
+			if ( ! isset( $dep_obj->registered[$handle] ) )
 				return false;
 
-			if ( !$data_name )
+			if ( ! $data_name )
 				return $dep_obj->registered[$handle]->extra;
 
 			if ( !method_exists( $dep_obj, 'get_data' ) )
@@ -491,7 +501,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			}
 			if ( preg_match( '/ajax\.googleapis\.com\//', $src ) ) {
 				$src = remove_query_arg( 'ver', $src );
-				if ( strpos( $src, $this->google_scripts[$this->jquery_tag][1] . ".js" ) ) {
+				if ( strpos( $src, $this->google_scripts[$this->jquery_tag][1] . '.js' ) ) {
 					$this->noconflict_next = TRUE;
 				}
 			}
@@ -499,7 +509,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		}
 
 		static function remove_ver_query_filter( $src ) {
-			$ugl =  self::get_instance();
+			$ugl = self::get_instance();
 			return $ugl->remove_ver_query( $src );
 		}
 	}
