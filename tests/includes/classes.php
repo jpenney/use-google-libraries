@@ -33,8 +33,9 @@ if ( class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			parent::newscripts_fix_jquery_core( $scripts );
 		}
 
-		public function newscripts_build_url( $lib, $ver, $js, $orig_url ) {
-			return parent::newscripts_build_url( $lib, $ver, $js, $orig_url );
+		public function newscripts_build_url( $name, $lib, $ver, $js, $orig_url ) {
+			return parent::newscripts_build_url(
+				$name, $lib, $ver, $js, $orig_url );
 		}
 
 		public function get_noconflict_next( ) {
