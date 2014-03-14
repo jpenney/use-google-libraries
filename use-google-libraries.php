@@ -277,7 +277,7 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		static function debug( $message ) {
 			if ( WP_DEBUG !== false ) {
 				if ( is_array( $message ) || is_object( $message ) ) {
-					$message = print_r( $message, true );
+					$message = var_export( $message, true );
 				}
 				error_log( 'Use Google Libraries: ' . $message );
 			}
@@ -456,7 +456,7 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		function replace_default_scripts( &$scripts ) {
 			$newscripts = $this->get_newscripts( $scripts );
 			foreach ( $newscripts as $script ) {
-				$olddata = $this->WP_Dependency_get_data( $scripts, $script->handle );
+				$olddata = $this->wp_dependency_get_data( $scripts, $script->handle );
 				$scripts->remove( $script->handle );
 				// re-register with original ver
 				$scripts->add( $script->handle, $script->src, $script->deps, $script->ver );
@@ -469,7 +469,7 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		}
 
 
-		function WP_Dependency_get_data( $dep_obj, $handle, $data_name = false ) {
+		function wp_dependency_get_data( $dep_obj, $handle, $data_name = false ) {
 
 			if ( ! method_exists( $dep_obj, 'add_data' ) )
 				return false;
@@ -480,7 +480,7 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			if ( ! $data_name )
 				return $dep_obj->registered[$handle]->extra;
 
-			if ( !method_exists( $dep_obj, 'get_data' ) )
+			if ( ! method_exists( $dep_obj, 'get_data' ) )
 				return $dep_obj->registered[$handle]->extra[$data_name];
 
 			return $dep_obj->get_data( $handle, $data_name );
@@ -497,7 +497,7 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		function remove_ver_query( $src ) {
 			if ( $this->noconflict_next ) {
 				$this->noconflict_next = FALSE;
-				echo self::$noconflict_inject;
+				echo self::$noconflict_inject; // xss ok
 			}
 			if ( preg_match( '/ajax\.googleapis\.com\//', $src ) ) {
 				$src = remove_query_arg( 'ver', $src );
