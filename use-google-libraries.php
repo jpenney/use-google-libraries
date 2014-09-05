@@ -31,7 +31,7 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 	class JCP_UseGoogleLibraries {
 
 		private static $instance;
-		private static $version = '1.5.2';
+		private static $version = '1.6dev';
 		public static function get_instance() {
 			if ( !isset( self::$instance ) ) {
 				self::$instance =  new JCP_UseGoogleLibraries();
@@ -112,11 +112,6 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		protected static $script_before_init_notice =
 			'Another plugin has registered or enqued a script before the "init" action.  Attempting to work around it.';
 		
-		/**
-		 * PHP 4 Compatible Constructor
-		 */
-		function JCP_UseGoogleLibraries() {$this->__construct();}
-
 		/**
 		 * PHP 5 Constructor
 		 */
