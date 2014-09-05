@@ -4,11 +4,9 @@ class UGL_ScriptTests extends UGL_ScriptTestCase {
 
 	function test_protocol_relative_url() {
 		$jquery_tag = $this->ugl->get_jquery_tag();
-		$jquery = $this->scripts->query( $jquery_tag );
-		$prefix = '';
-		if ( $this->ugl->get_protocol_relative_supported() ) {
-			$prefix = '//';
-		} else {
+		$jquery     = $this->scripts->query( $jquery_tag );
+		$prefix     = '//';
+		if ( ! $this->ugl->get_protocol_relative_supported() ) {
 			if ( is_ssl() ) {
 				$prefix = 'https://';
 			} else {
@@ -23,8 +21,10 @@ class UGL_ScriptTests extends UGL_ScriptTestCase {
 		foreach ( array_keys( $scripts ) as $handle ) {
 			if ( $script = $this->scripts->query( $handle ) ) {
 				if ( $script->src && strpos( $script->ver, '-' ) === false ) {
-					$this->assertContains( '//ajax.googleapis.com/ajax/libs',
-						$script->src, $handle + ' should be loading from google' );
+					$this->assertContains(
+						'//ajax.googleapis.com/ajax/libs',
+						$script->src, $handle + ' should be loading from google'
+					);
 				}
 			}
 		}
@@ -35,8 +35,10 @@ class UGL_ScriptTests extends UGL_ScriptTestCase {
 		foreach ( array_keys( $scripts ) as $handle ) {
 			if ( $script = $this->scripts->query( $handle ) ) {
 				if ( $script->src && strpos( $script->ver, '-' ) !== false ) {
-					$this->assertNotContains( '//ajax.googleapis.com/ajax/libs',
-						$script->src, $handle + ' should not be loading from google' );
+					$this->assertNotContains(
+						'//ajax.googleapis.com/ajax/libs',
+						$script->src, $handle + ' should not be loading from google'
+					);
 				}
 			}
 		}
@@ -48,14 +50,14 @@ class UGL_ScriptTests extends UGL_ScriptTestCase {
 			strpos( $scriptaculous->src, '//ajax.googleapis.com/ajax/libs' ) === false ) {
 			$this->markTestSkipped( 'does not apply, not replacing scriptaculous version 1.8.0' );
 		}
-		$this->assertContains( '1.8', $script->src );
-		$this->assertNotContains( '1.8.0', $script->src );
+		$this->assertContains( '1.8', $scriptaculous->src );
+		$this->assertNotContains( '1.8.0', $scriptaculous->src );
 	}
 
 
 	function test_noconfict_next_set() {
 		$jquery = $this->scripts->query( $this->ugl->get_jquery_tag() );
-		$src = $jquery->src;
+		$src    = $jquery->src;
 		if ( strpos( $src, '//ajax.googleapis.com/ajax/libs' ) === false ) {
 			$this->markTestSkipped( 'jQuery not replaced, noconflict_next unused' );
 		}
@@ -64,8 +66,10 @@ class UGL_ScriptTests extends UGL_ScriptTestCase {
 
 		$this->ugl->remove_ver_query( $src );
 
-		$this->assertTrue( $this->ugl->get_noconflict_next(),
-			"noconflict_next should be set after remove_ver_query is run for jquery" );
+		$this->assertTrue(
+			$this->ugl->get_noconflict_next(),
+			'noconflict_next should be set after remove_ver_query is run for jquery'
+		);
 	}
 
 	function test_noconflict_injected() {
@@ -74,7 +78,9 @@ class UGL_ScriptTests extends UGL_ScriptTestCase {
 		$this->expectOutputString( $this->ugl->get_noconflict_inject() );
 		$this->ugl->remove_ver_query( 'http://example.com/' );
 
-		$this->assertFalse( $this->ugl->get_noconflict_next(),
-			"noconflict_next should be cleared after remove_ver_query runs" );
+		$this->assertFalse(
+			$this->ugl->get_noconflict_next(),
+			'noconflict_next should be cleared after remove_ver_query runs'
+		);
 	}
 }

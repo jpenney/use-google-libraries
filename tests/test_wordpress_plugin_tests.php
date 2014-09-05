@@ -20,7 +20,7 @@ class WP_Test_WordPress_Plugin_Tests extends WP_UnitTestCase {
 	 */
 	function test_wp_version() {
 
-		if ( !getenv( 'TRAVIS_PHP_VERSION' ) ) {
+		if ( ! getenv( 'TRAVIS_PHP_VERSION' ) ) {
 			$this->markTestSkipped( 'Not running on Travis CI' );
 		}
 
@@ -35,7 +35,7 @@ class WP_Test_WordPress_Plugin_Tests extends WP_UnitTestCase {
 		//grab the exact version number to verify that we're on trunk
 		if ( $requested_version == 'master' ) {
 			// check that we have the https wrapper
-			if ( !in_array( 'https', stream_get_wrappers() ) )
+			if ( ! in_array( 'https', stream_get_wrappers() ) )
 				$this->markTestSkipped( 'https wrapper unavailable' );
 
 			$file = file_get_contents( 'https://raw.github.com/WordPress/WordPress/master/wp-includes/version.php' );

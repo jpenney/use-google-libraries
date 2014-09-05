@@ -3,8 +3,8 @@
 if ( class_exists( 'JCP_UseGoogleLibraries' ) ) {
 	class JCP_UseGoogleLibraries_Test extends JCP_UseGoogleLibraries {
 		public static function get_instance() {
-			if ( !isset( self::$instance ) || ! is_a( self::$instance, 'JCP_UseGoogleLibraries_Test' ) ) {
-				self::$instance =  new JCP_UseGoogleLibraries_Test();
+			if ( ! isset( self::$instance ) || ! is_a( self::$instance, 'JCP_UseGoogleLibraries_Test' ) ) {
+				self::$instance = new JCP_UseGoogleLibraries_Test();
 			}
 			return self::$instance;
 		}
@@ -35,7 +35,8 @@ if ( class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 		public function newscripts_build_url( $name, $lib, $ver, $js, $orig_url ) {
 			return parent::newscripts_build_url(
-				$name, $lib, $ver, $js, $orig_url );
+				$name, $lib, $ver, $js, $orig_url
+			);
 		}
 
 		public function get_noconflict_next( ) {
@@ -47,7 +48,7 @@ if ( class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		}
 
 		public function set_noconflict_next( $value ) {
-			$this->noconfilct_next = $value;
+			$this->noconflict_next = $value;
 		}
 	}
 }
