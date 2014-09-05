@@ -212,7 +212,7 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			$this->jquery_tag     = 'jquery';
 			$this->google_scripts = self::$default_google_scripts;
 
-			$this->noconflict_next = FALSE;
+			$this->noconflict_next = false;
 			// protocol-relative URLS accepted by `wp_register_scripts`
 			// starting with version 3.5
 			$this->protocol_relative_supported = version_compare(
@@ -472,17 +472,21 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 		function wp_dependency_get_data( $dep_obj, $handle, $data_name = false ) {
 
-			if ( ! method_exists( $dep_obj, 'add_data' ) )
+			if ( ! method_exists( $dep_obj, 'add_data' ) ) {
 				return false;
+			}
 
-			if ( ! isset( $dep_obj->registered[$handle] ) )
+			if ( ! isset( $dep_obj->registered[ $handle ] ) ) {
 				return false;
+			}
 
-			if ( ! $data_name )
-				return $dep_obj->registered[$handle]->extra;
+			if ( ! $data_name ) {
+				return $dep_obj->registered[ $handle ]->extra;
+			}
 
-			if ( ! method_exists( $dep_obj, 'get_data' ) )
-				return $dep_obj->registered[$handle]->extra[$data_name];
+			if ( ! method_exists( $dep_obj, 'get_data' ) ) {
+				return $dep_obj->registered[ $handle ]->extra[ $data_name ];
+			}
 
 			return $dep_obj->get_data( $handle, $data_name );
 		}
@@ -497,13 +501,13 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		 */
 		function remove_ver_query( $src ) {
 			if ( $this->noconflict_next ) {
-				$this->noconflict_next = FALSE;
+				$this->noconflict_next = false;
 				echo self::$noconflict_inject; // xss ok
 			}
 			if ( preg_match( '/ajax\.googleapis\.com\//', $src ) ) {
 				$src = remove_query_arg( 'ver', $src );
-				if ( strpos( $src, $this->google_scripts[$this->jquery_tag][1] . '.js' ) ) {
-					$this->noconflict_next = TRUE;
+				if ( strpos( $src, $this->google_scripts[ $this->jquery_tag ][1] . '.js' ) ) {
+					$this->noconflict_next = true;
 				}
 			}
 			return $src;
