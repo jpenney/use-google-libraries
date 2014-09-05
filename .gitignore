@@ -7,7 +7,6 @@
 *.pydevproject
 .project
 .metadata
-bin/
 tmp/
 *.tmp
 *.bak
@@ -49,3 +48,8 @@ nbproject/
 
 # SVN
 .svn
+
+# phptidy
+.phptidy-cache
+*.phptidybak
+*.phptidybak~
