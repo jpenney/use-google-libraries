@@ -3,8 +3,8 @@ Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API, YSlow, Page Speed
 Requires at least: 3.4
-Tested up to: 3.6
-Stable tag: 1.5.2
+Tested up to: 4.0
+Stable tag: 1.6
 
 Allows your site to use common javascript libraries from Google's AJAX 
 Libraries CDN, rather than from WordPress's own copies.
@@ -36,6 +36,13 @@ you](http://encosia.com/2008/12/10/3-reasons-why-you-should-let-google-host-jque
 * [Prototype](http://www.prototypejs.org/)
 * [script.aculo.us](http://script.aculo.us/)
 * [swfobject](http://code.google.com/p/swfobject/)
+
+= Links =
+
+* [Use Google Libraries Home](http://jasonpenney.net/wordpress-plugins/use-google-libraries/)
+* [Issue Tracker](http://github.com/jpenney/use-google-libraries/issues)
+* [GitHub Repository](http://github.com/jpenney/use-google-libraries)
+* [Support Forum](http://wordpress.org/support/plugin/use-google-libraries)
 
 == Installation ==
 
@@ -122,6 +129,7 @@ using K2.
 = 1.6 =
 
 + Drop support for PHP4, and WordPress < 3.4
++ clean up PHP 5.x strict issues
 
 = 1.5.2 =
 
@@ -268,5 +276,6 @@ which has very similar goals to this plugin.
 
 == Future Plans ==
 
-+ add ability to enable/disable loading from Google for specific libraries
++ add ability to disable protocol relative URLs
++ add ability to disable on frontend and/or admin
 
