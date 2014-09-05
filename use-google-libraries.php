@@ -327,13 +327,14 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			if ( $lib != '' ) {
 				// build new URL
 				$url  = "//ajax.googleapis.com/ajax/libs/$lib/$ver/$js.js";
-				$head = wp_remote_head( "http:$url" );
+				$proto_url = "http:$url";
+				$head = wp_remote_head( $proto_url );
 				if ( wp_remote_retrieve_response_code( $head ) !== 200 ) {
 					self::debug( "Google servers do not seem to be hosting requested version of $name (version $ver). Using version provided by WordPress." );
 					return $orig_url;
 				}
 				if ( ! $this->protocol_relative_supported ) {
-					return "http:$url";
+					return $proto_url;
 				}
 				return $url;
 			} else {
