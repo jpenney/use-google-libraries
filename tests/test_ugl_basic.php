@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * 
+ * @medium
+ * 
+ */
 class UGL_BasicTests extends UGL_UnitTestCase {
 
 	function test_ugl() {
