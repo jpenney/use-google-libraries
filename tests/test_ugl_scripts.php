@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @medium
+ *
+ */
 class UGL_ScriptTests extends UGL_ScriptTestCase {
 
 	function test_protocol_relative_url() {
