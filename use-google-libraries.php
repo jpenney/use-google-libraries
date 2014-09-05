@@ -30,11 +30,11 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 	class JCP_UseGoogleLibraries {
 
-		private static $instance;
+		protected static $instance;
 		private static $version = '1.6dev';
 		public static function get_instance() {
 			if ( !isset( self::$instance ) ) {
-				self::$instance =  new JCP_UseGoogleLibraries();
+				self::$instance = new JCP_UseGoogleLibraries();
 			}
 			return self::$instance;
 		}
@@ -257,7 +257,6 @@ if ( !class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			$concatenate_scripts = false;
 
 		}
-
 
 		static function replace_default_scripts_action( &$scripts ) {
 			$ugl = self::get_instance();
