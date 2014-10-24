@@ -11,7 +11,7 @@ See the [README.txt][1.0] file, or one of the links below:
     - [Issue Tracker][1.4.1]
     - [Forum][1.4.2]
  - Releases
-    - __[1.6.1][1.5]__ [![Build Status](https://travis-ci.org/jpenney/use-google-libraries.png?branch=master)](https://travis-ci.org/jpenney/use-google-libraries)[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/?branch=master)[![Code Coverage](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/?branch=master)         
+    - __[1.6.2][1.5]__ [![Build Status](https://travis-ci.org/jpenney/use-google-libraries.png?branch=master)](https://travis-ci.org/jpenney/use-google-libraries)[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/?branch=master)[![Code Coverage](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/?branch=master)         
     -  __[dev][1.6]__ [![Build Status](https://travis-ci.org/jpenney/use-google-libraries.png?branch=develop)](https://travis-ci.org/jpenney/use-google-libraries)[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/?branch=develop)[![Code Coverage](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/?branch=develop)
 
 
