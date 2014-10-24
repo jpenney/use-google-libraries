@@ -155,9 +155,12 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			'jquery-ui-progressbar' => array( '', '', 'jquery-ui-core' ),
 			'jquery-ui-resizable' => array( '', '', 'jquery-ui-core' ),
 			'jquery-ui-selectable' => array( '', '', 'jquery-ui-core' ),
+			'jquery-ui-selectmenu' => array( '', '', 'jquery-ui-core' ),/* jQuery UI 1.11 */
 			'jquery-ui-slider' => array( '', '', 'jquery-ui-core' ),
 			'jquery-ui-sortable' => array( '', '', 'jquery-ui-core' ),
+			'jquery-ui-spinner' => array( '', '', 'jquery-ui-core' ), /* jQuery UI 1.11 */
 			'jquery-ui-tabs' => array( '', '', 'jquery-ui-core' ),
+			'jquery-ui-tooltip' => array( '', '', 'jquery-ui-core' ), /* jQuery UI 1.11 */
 			'jquery-ui-widget' => array( '', '', 'jquery-ui-core' ),  /* jQuery UI 1.8 */
 
 			/* jQuery Effects */
@@ -170,9 +173,11 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			'jquery-effects-fade' => array( '', '', 'jquery-ui-core' ),  /* jQuery UI 1.8 */
 			'jquery-effects-fold' => array( '', '', 'jquery-ui-core' ),
 			'jquery-effects-highlight' => array( '', '', 'jquery-ui-core' ),
+			'jquery-effects-puff' => array( '', '', 'jquery-ui-core' ), /* jQuery UI 1.11 */
 			'jquery-effects-pulsate' => array( '', '', 'jquery-ui-core' ),
 			'jquery-effects-scale' => array( '', '', 'jquery-ui-core' ),
 			'jquery-effects-shake' => array( '', '', 'jquery-ui-core' ),
+			'jquery-effects-size' => array( '', '', 'jquery-ui-core' ), /* jQuery UI 1.11 */
 			'jquery-effects-slide' => array( '', '', 'jquery-ui-core' ),
 			'jquery-effects-transfer' => array( '', '', 'jquery-ui-core' ),
 
