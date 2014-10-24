@@ -87,4 +87,22 @@ class UGL_ScriptTests extends UGL_ScriptTestCase {
 			'noconflict_next should be cleared after remove_ver_query runs'
 		);
 	}
+
+	function test_all_jquery_ui_replaced() {
+		$scripts = $this->ugl->get_google_scripts();
+		$known = array_keys( $scripts );
+		$missing = array();
+		foreach ( array_keys( $this->scripts->registered ) as $handle ) {
+			if ( strpos( $handle, 'jquery-ui-') === 0 ) {
+				if ( !in_array ( $handle, $known ) ) {
+					$missing[] = $handle;
+				}
+			}
+		}
+		$this->assertEmpty(
+				$missing,
+				'Not all jquery-ui components are handled by UGL: ' .
+				print_r($missing, true) );
+	}
+
 }

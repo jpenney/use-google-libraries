@@ -3,7 +3,7 @@
   Plugin Name: Use Google Libraries
   Plugin URI: http://jasonpenney.net/wordpress-plugins/use-google-libraries/
   Description: Allows your site to use common javascript libraries from Google's AJAX Libraries CDN, rather than from WordPress's own copies.
-  Version: 1.6.1
+  Version: 1.6.2
   Author: Jason Penney
   Author URI: http://jasonpenney.net/
   Text Domain: use-google-libraries
@@ -34,7 +34,7 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 
 		protected static $instance;
 		protected static $plugin_file = __FILE__;
-		protected static $version = '1.6.1';
+		protected static $version = '1.6.2';
 		protected static $noconflict_inject = "<script type='text/javascript'>try{jQuery.noConflict();}catch(e){};</script>\n";
 
 		public static function get_instance() {
@@ -155,9 +155,12 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			'jquery-ui-progressbar' => array( '', '', 'jquery-ui-core' ),
 			'jquery-ui-resizable' => array( '', '', 'jquery-ui-core' ),
 			'jquery-ui-selectable' => array( '', '', 'jquery-ui-core' ),
+			'jquery-ui-selectmenu' => array( '', '', 'jquery-ui-core' ),/* jQuery UI 1.11 */
 			'jquery-ui-slider' => array( '', '', 'jquery-ui-core' ),
 			'jquery-ui-sortable' => array( '', '', 'jquery-ui-core' ),
+			'jquery-ui-spinner' => array( '', '', 'jquery-ui-core' ), /* jQuery UI 1.11 */
 			'jquery-ui-tabs' => array( '', '', 'jquery-ui-core' ),
+			'jquery-ui-tooltip' => array( '', '', 'jquery-ui-core' ), /* jQuery UI 1.11 */
 			'jquery-ui-widget' => array( '', '', 'jquery-ui-core' ),  /* jQuery UI 1.8 */
 
 			/* jQuery Effects */
@@ -170,9 +173,11 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 			'jquery-effects-fade' => array( '', '', 'jquery-ui-core' ),  /* jQuery UI 1.8 */
 			'jquery-effects-fold' => array( '', '', 'jquery-ui-core' ),
 			'jquery-effects-highlight' => array( '', '', 'jquery-ui-core' ),
+			'jquery-effects-puff' => array( '', '', 'jquery-ui-core' ), /* jQuery UI 1.11 */
 			'jquery-effects-pulsate' => array( '', '', 'jquery-ui-core' ),
 			'jquery-effects-scale' => array( '', '', 'jquery-ui-core' ),
 			'jquery-effects-shake' => array( '', '', 'jquery-ui-core' ),
+			'jquery-effects-size' => array( '', '', 'jquery-ui-core' ), /* jQuery UI 1.11 */
 			'jquery-effects-slide' => array( '', '', 'jquery-ui-core' ),
 			'jquery-effects-transfer' => array( '', '', 'jquery-ui-core' ),
 

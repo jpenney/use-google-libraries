@@ -11,8 +11,8 @@ See the [README.txt][1.0] file, or one of the links below:
     - [Issue Tracker][1.4.1]
     - [Forum][1.4.2]
  - Releases
-    - __[1.5.2][1.5]__ [![Build Status](https://travis-ci.org/jpenney/use-google-libraries.png?branch=master)](https://travis-ci.org/jpenney/use-google-libraries)         
-    -  __[dev][1.6]__ [![Build Status](https://travis-ci.org/jpenney/use-google-libraries.png?branch=develop)](https://travis-ci.org/jpenney/use-google-libraries)
+    - __[1.6.2][1.5]__ [![Build Status](https://travis-ci.org/jpenney/use-google-libraries.png?branch=master)](https://travis-ci.org/jpenney/use-google-libraries)[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/?branch=master)[![Code Coverage](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/?branch=master)         
+    -  __[dev][1.6]__ [![Build Status](https://travis-ci.org/jpenney/use-google-libraries.png?branch=develop)](https://travis-ci.org/jpenney/use-google-libraries)[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/?branch=develop)[![Code Coverage](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/jpenney/use-google-libraries/?branch=develop)
 
 
 [1.0]: ./README.txt
@@ -21,5 +21,5 @@ See the [README.txt][1.0] file, or one of the links below:
 [1.3]: https://github.com/jpenney/use-google-libraries
 [1.4.1]: https://github.com/jpenney/use-google-libraries/issues
 [1.4.2]: http://wordpress.org/support/plugin/use-google-libraries
-[1.5]: http://downloads.wordpress.org/plugin/use-google-libraries.1.5.2.zip
+[1.5]: http://downloads.wordpress.org/plugin/use-google-libraries.1.6.1.zip
 [1.6]: https://github.com/jpenney/use-google-libraries/archive/develop.zip
