@@ -226,6 +226,10 @@ if ( ! class_exists( 'JCP_UseGoogleLibraries' ) ) {
 		}
 
 		static function configure_plugin() {
+            if ( version_compare( get_bloginfo( 'version' ), '4.2', '>=') ) {
+                self::debug( 'Not yet qualified with this version of WordPress. Bypassing UGL.' );
+                return;
+            }
 			add_action(
 				'wp_default_scripts',
 				array(

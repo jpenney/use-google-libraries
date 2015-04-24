@@ -3,8 +3,8 @@ Contributors: jczorkmid
 Donate link: http://jasonpenney.net/donate
 Tags: javascript, performance, CDN, Google, jQuery, Prototype, MooTools, Dojo, Google AJAX Libraries API, YSlow, Page Speed
 Requires at least: 3.4
-Tested up to: 4.0
-Stable tag: 1.6.2
+Tested up to: 4.1.3
+Stable tag: 1.6.2.1
 
 Allows your site to use common javascript libraries from Google's AJAX 
 Libraries CDN, rather than from WordPress's own copies.
@@ -126,6 +126,10 @@ using K2.
 
 == Changelog ==
 
+= 1.6.2.1 =
+
++ Bypass functionality when running under 4.2+ until next version to avoid breaking sites.
+
 = 1.6.2 =
 
 + added some missing jQuery UI modules (hopefully fixes issues from support 
@@ -242,9 +246,9 @@ from  [Peter  Wilson](http://peterwilson.cc/).
 
 == Upgrade Notice ==
 
-= 1.6.2 =
+= 1.6.2.1 =
 
-Fixes missing registrations. Upgrade immediately!
+Bypass UGL in unsupported versions of WordPress (update now, and UGL will start working again when it's ready).
 
 == A Request ==
 
